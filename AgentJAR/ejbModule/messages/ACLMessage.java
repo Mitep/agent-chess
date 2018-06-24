@@ -5,6 +5,8 @@ import java.util.HashMap;
 import agents.AID;
 import agents.Performative;
 
+import javax.jms.Message;
+
 public class ACLMessage {
 
 	private Performative performative;
