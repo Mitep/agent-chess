@@ -17,10 +17,11 @@ import javax.naming.InitialContext;
 
 @Singleton
 @Startup
-public class AgentCenter implements AgentCenterLocal , MessageListener{
+public class AgentCenter implements AgentCenterLocal , MessageListener {
 
 	private String alias;
 	private String address;
+	
 	/**
 	 *  agenti na ovom cvoru
 	 */
@@ -31,7 +32,7 @@ public class AgentCenter implements AgentCenterLocal , MessageListener{
 	
 	public String getAddress() {
 		return address;
-	}
+	} 
 
 	public void setAddress(String address) {
 		this.address = address;
