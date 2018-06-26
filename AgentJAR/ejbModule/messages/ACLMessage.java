@@ -5,8 +5,6 @@ import java.util.HashMap;
 import agents.AID;
 import agents.Performative;
 
-import javax.jms.Message;
-
 public class ACLMessage {
 
 	private Performative performative;
@@ -135,4 +133,5 @@ public class ACLMessage {
 	public void setReplyBy(long replyBy) {
 		this.replyBy = replyBy;
 	}
+
 }

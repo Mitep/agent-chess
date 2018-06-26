@@ -30,7 +30,6 @@ public class MDBConsumer implements MessageListener {
 	 * Default constructor.
 	 */
 	public MDBConsumer() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

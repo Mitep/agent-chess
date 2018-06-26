@@ -2,7 +2,7 @@ package agents;
 
 import messages.ACLMessage;
 
-public interface Agent {
+public interface AgentInterface {
 
 	public void handleMessage(ACLMessage poruka);
 }
