@@ -1,4 +1,4 @@
-package agents;
+package model.acl;
 
 public enum Performative {
 	accept_proposal, agree, cancel, cfp, confirm, disconfirm, failure, inform, inform_if, inform_ref, not_understood,

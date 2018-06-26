@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
-import messages.ACLMessage;
+import model.acl.ACLMessage;
 
 @Local
 public interface RestMessageLocal {

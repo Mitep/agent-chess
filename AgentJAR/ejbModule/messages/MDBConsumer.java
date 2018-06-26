@@ -13,7 +13,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import agents.AID;
+import model.acl.ACLMessage;
+import model.agent.AID;
 
 /**
  * Message-Driven Bean implementation class for: MDBConsumer

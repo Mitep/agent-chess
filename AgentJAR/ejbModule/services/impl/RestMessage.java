@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import messages.ACLMessage;
+import model.acl.ACLMessage;
 import services.interfaces.RestMessageLocal;
 
 @Stateless

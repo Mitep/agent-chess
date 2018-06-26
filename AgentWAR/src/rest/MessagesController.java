@@ -6,7 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import messages.ACLMessage;
+import model.acl.ACLMessage;
 
 @Path("/messages")
 public class MessagesController {

@@ -1,9 +1,8 @@
-package messages;
+package model.acl;
 
 import java.util.HashMap;
 
-import agents.AID;
-import agents.Performative;
+import model.agent.AID;
 
 public class ACLMessage {
 

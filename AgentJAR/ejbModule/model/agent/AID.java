@@ -1,4 +1,4 @@
-package agents;
+package model.agent;
 
 public class AID {
 

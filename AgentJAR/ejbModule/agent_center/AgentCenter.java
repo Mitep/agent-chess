@@ -1,6 +1,4 @@
-package agents.center;
-
-import java.util.HashMap;
+package agent_center;
 
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -22,13 +20,10 @@ public class AgentCenter implements AgentCenterLocal , MessageListener {
 	private String alias;
 	private String address;
 	
-	/**
-	 *  agenti na ovom cvoru
-	 */
-	private HashMap<String, Object> agents;
-
 	public static final String LOOKUP = "";
 	public static final String QUEUE = "";
+	
+	// mozda neka lista cvorova 
 	
 	public String getAddress() {
 		return address;
@@ -45,7 +40,7 @@ public class AgentCenter implements AgentCenterLocal , MessageListener {
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-
+	
 	@Override
 	public void onMessage(Message arg0) {
 		try {
@@ -74,4 +69,5 @@ public class AgentCenter implements AgentCenterLocal , MessageListener {
 		}
 		
 	}
+
 }
