@@ -19,7 +19,7 @@ public class RestAgents implements RestAgentsLocal {
 	public List<AgentType> getAgentsClasses() {
 		try {
 			Context context = new InitialContext();
-			AgentManagerLocal aml = (AgentManagerLocal) context.lookup("");
+			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
 			return aml.getAgentTypes();
 		} catch (NamingException e) {
 			e.printStackTrace();

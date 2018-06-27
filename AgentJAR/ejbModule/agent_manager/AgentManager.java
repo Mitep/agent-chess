@@ -1,5 +1,6 @@
 package agent_manager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ public class AgentManager implements AgentManagerLocal {
 
 	private HashMap<AID, AgentClass> runningAgents;
 	private List<AgentType> agentTypes;
-	
+
 	public AgentManager() {
 	}
 
@@ -28,13 +29,37 @@ public class AgentManager implements AgentManagerLocal {
 		runningAgents = new HashMap<AID, AgentClass>();
 		initAgentTypes();
 	}
-	
+
 	private void initAgentTypes() {
 		agentTypes = new ArrayList<AgentType>();
-		// refleksijom izvucemo
-		Class AgentClass;
 
-		
+		final File basePackage = new File(
+				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\\agents");
+
+		agentTypes = processFile(basePackage);
+
+	}
+
+	private ArrayList<AgentType> processFile(File f) {
+		ArrayList<AgentType> types = new ArrayList<>();
+		if (f.isDirectory()) {
+			for (File file : f.listFiles()) {
+				ArrayList<AgentType> tmp = processFile(file);
+				types.addAll(tmp);
+			}
+		}
+
+		if (f.isFile()) {
+			File parent = f.getParentFile();
+			String module = parent.getPath().substring(parent.getPath().indexOf("agents"));
+			module = module.replace(File.separatorChar, '.');
+			String name = f.getName();
+			name = name.substring(0, name.indexOf("."));
+			AgentType at = new AgentType(name, module);
+			types.add(at);
+		}
+
+		return types;
 	}
 
 	@Override
