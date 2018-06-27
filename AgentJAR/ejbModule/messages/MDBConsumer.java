@@ -2,17 +2,14 @@ package messages;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import agent_manager.AgentManagerLocal;
 import model.acl.ACLMessage;
 import model.agent.AID;
 
@@ -21,12 +18,12 @@ import model.agent.AID;
  */
 @MessageDriven(activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-		@ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/chatAppQueue") })
+		@ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/mdbConsumerQueue") })
 public class MDBConsumer implements MessageListener {
 
-	private static final String REMOTE_FACTORY = "REMOTE_FACTORY";
-	private static final String CHATAPP_QUEUE = "CHATAPP_QUEUE";
-	
+	public static final String REMOTE_FACTORY = "java:jboss/exported/jms/RemoteConnectionFactory";
+	public static final String MDB_CONSUMER_QUEUE = "java:jboss/exported/jms/queue/mdbConsumerQueue";
+
 	/**
 	 * Default constructor.
 	 */
@@ -40,24 +37,19 @@ public class MDBConsumer implements MessageListener {
 		try {
 			ACLMessage msg = (ACLMessage) message.getObjectProperty("acl_message");
 			AID[] receivers = msg.getReceivers();
-			for(AID a : receivers) {
-				Context context = new InitialContext();
-				
-				ConnectionFactory cf = (ConnectionFactory) context.lookup(REMOTE_FACTORY);
-				
-				
-				final Queue queue = (Queue) context.lookup(CHATAPP_QUEUE);
-				context.close();
-				Connection connection = cf.createConnection();
-				final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-				
+
+			Context context = new InitialContext();
+			AgentManagerLocal manager = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
+			for (AID a : receivers) {
+				if (!manager.msgToAgent(a, msg)) {
+					// TODO slanje poruke na drugi cvor
+				}
 			}
 		} catch (JMSException e) {
 			e.printStackTrace();
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

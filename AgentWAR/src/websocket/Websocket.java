@@ -40,7 +40,7 @@ public class Websocket {
 	} 
 	
 	@OnError
-	public void onError(Session session) throws Exception {
+	public void onError(Session session, Throwable t) throws Exception {
 		Context context = new InitialContext();
 		WebSocketLocal ws = (WebSocketLocal) context.lookup(WEBSOCKET);
 		ws.onError(session);;

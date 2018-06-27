@@ -14,17 +14,17 @@ import services.interfaces.WebSocketLocal;
 public class WebSocket implements WebSocketLocal {
 
 	private static List<Session> sessions = new ArrayList<Session>();
-	
+
 	@Override
 	public void sendMessage(String msg) throws Exception {
-		for(Session s : sessions) {
+		for (Session s : sessions) {
 			s.getAsyncRemote().sendText(msg);
 		}
 	}
 
 	@Override
 	public void onOpen(Session session) throws Exception {
-		if(!sessions.contains(session))
+		if (!sessions.contains(session))
 			sessions.add(session);
 	}
 
@@ -35,14 +35,14 @@ public class WebSocket implements WebSocketLocal {
 
 	@Override
 	public void onClose(Session session) throws Exception {
-		if(sessions.contains(session))
+		if (sessions.contains(session))
 			sessions.remove(session);
 	}
 
 	@Override
 	public void onError(Session session) throws Exception {
 		System.out.println("Greska u Websocketu.");
-		if(sessions.contains(session))
+		if (sessions.contains(session))
 			sessions.remove(session);
 	}
 
