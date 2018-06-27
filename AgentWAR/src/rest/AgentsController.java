@@ -25,7 +25,6 @@ public class AgentsController {
 	@Path("/classes")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<AgentType> getAgentTypes() {
-		System.out.println("stignio");
 		try {
 			Context context = new InitialContext();
 			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
@@ -54,6 +53,13 @@ public class AgentsController {
 	@Path("/running/{type}/{name}")
 	public void startAgent(@PathParam("type") String type,@PathParam("name") String name) {
 		//  pokreni agenta sa zadatim imenom
+		try {
+			Context context = new InitialContext();
+			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
+			ral.putAgentsRunning(type, name);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@DELETE
@@ -61,6 +67,13 @@ public class AgentsController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopAgent(@PathParam("aid") String aid) {
 		// zaustavi odredjenog agenta
+		try {
+			Context context = new InitialContext();
+			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
+			ral.deleteAgentsRunning(aid);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

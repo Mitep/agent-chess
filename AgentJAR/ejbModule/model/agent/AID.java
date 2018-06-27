@@ -1,19 +1,21 @@
 package model.agent;
 
+import model.center.AgentCenter;
+
 public class AID {
 
 	private String name;
-	private String host;
+	private AgentCenter host;
 	private AgentType type;
 
 	public AID() {
 		super();
 		name = "";
-		host = "";
+		host = null;
 		type = null;
 	}
 
-	public AID(String name, String host, AgentType type) {
+	public AID(String name, AgentCenter host, AgentType type) {
 		super();
 		this.name = name;
 		this.host = host;
@@ -28,20 +30,20 @@ public class AID {
 		this.name = name;
 	}
 
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
 	public AgentType getType() {
 		return type;
 	}
 
 	public void setType(AgentType type) {
 		this.type = type;
+	}
+
+	public AgentCenter getHost() {
+		return host;
+	}
+
+	public void setHost(AgentCenter host) {
+		this.host = host;
 	}
 
 }

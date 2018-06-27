@@ -13,6 +13,7 @@ import model.acl.ACLMessage;
 import model.agent.AID;
 import model.agent.AgentClass;
 import model.agent.AgentType;
+import model.center.AgentCenter;
 
 @Singleton
 @Startup
@@ -20,6 +21,7 @@ public class AgentManager implements AgentManagerLocal {
 
 	private HashMap<AID, AgentClass> runningAgents;
 	private List<AgentType> agentTypes;
+	private AgentCenter host;
 
 	public AgentManager() {
 	}
@@ -34,10 +36,9 @@ public class AgentManager implements AgentManagerLocal {
 		agentTypes = new ArrayList<AgentType>();
 
 		final File basePackage = new File(
-				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\\agents");
+				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator + "agents");
 
 		agentTypes = processFile(basePackage);
-
 	}
 
 	private ArrayList<AgentType> processFile(File f) {
@@ -113,6 +114,21 @@ public class AgentManager implements AgentManagerLocal {
 		} else {
 			System.out.println("Ne postoji agent s tim identifikatorom!");
 		}
+	}
+
+	@Override
+	public AgentType getAgentType(String name, String module) {
+		for(AgentType at : agentTypes) {
+			if(at.getName().equals(name) && at.getModule().equals(module)) {
+				return at;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public AgentCenter getAgentCenter() {
+		return host;
 	}
 
 }
