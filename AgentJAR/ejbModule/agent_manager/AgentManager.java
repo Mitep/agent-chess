@@ -18,13 +18,23 @@ import model.agent.AgentType;
 public class AgentManager implements AgentManagerLocal {
 
 	private HashMap<AID, AgentClass> runningAgents;
-
+	private List<AgentType> agentTypes;
+	
 	public AgentManager() {
 	}
 
 	@PostConstruct
 	private void initAgentManager() {
 		runningAgents = new HashMap<AID, AgentClass>();
+		initAgentTypes();
+	}
+	
+	private void initAgentTypes() {
+		agentTypes = new ArrayList<AgentType>();
+		// refleksijom izvucemo
+		Class AgentClass;
+
+		
 	}
 
 	@Override
@@ -34,11 +44,7 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public List<AgentType> getAgentTypes() {
-		ArrayList<AgentType> tipovi = new ArrayList<>();
-		for (AID id : runningAgents.keySet()) {
-			tipovi.add(id.getType());
-		}
-		return tipovi;
+		return agentTypes;
 	}
 
 	@Override
