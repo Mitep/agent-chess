@@ -36,9 +36,15 @@ public class AgentManager implements AgentManagerLocal {
 		agentTypes = new ArrayList<AgentType>();
 
 		final File basePackage = new File(
-				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator + "agents");
+				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
+						+ "agents");
+		System.out.println(AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
 		agentTypes = processFile(basePackage);
+
+		for (AgentType at : agentTypes) {
+			System.out.println(at);
+		}
 	}
 
 	private ArrayList<AgentType> processFile(File f) {
@@ -53,6 +59,7 @@ public class AgentManager implements AgentManagerLocal {
 		if (f.isFile()) {
 			File parent = f.getParentFile();
 			String module = parent.getPath().substring(parent.getPath().indexOf("agents"));
+			System.out.println(module);
 			module = module.replace(File.separatorChar, '.');
 			String name = f.getName();
 			name = name.substring(0, name.indexOf("."));
@@ -86,16 +93,17 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public void startAgent(AID agent) {
-		if (runningAgents.containsKey(agent)) {
+		if (containsAgent(agent)) {
 			System.out.println("Vec postoji agent s tim identifikatorom!");
 		}
 
 		try {
 			Object obj = Class.forName(agent.getType().toString()).newInstance();
 			if (obj instanceof AgentClass) {
+				((AgentClass) obj).setId(agent);
 				runningAgents.put(agent, (AgentClass) obj);
 			} else {
-				System.out.println("Agent tipa " + agent.getType() + " se dodati u mapu!");
+				System.out.println("Agent tipa " + agent.getType() + " se ne moze dodati u mapu!");
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -109,7 +117,7 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public void stopAgent(AID agent) {
-		if (runningAgents.containsKey(agent)) {
+		if (containsAgent(agent)) {
 			runningAgents.remove(agent);
 		} else {
 			System.out.println("Ne postoji agent s tim identifikatorom!");
@@ -118,8 +126,8 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public AgentType getAgentType(String name, String module) {
-		for(AgentType at : agentTypes) {
-			if(at.getName().equals(name) && at.getModule().equals(module)) {
+		for (AgentType at : agentTypes) {
+			if (at.getName().equals(name) && at.getModule().equals(module)) {
 				return at;
 			}
 		}
@@ -129,6 +137,15 @@ public class AgentManager implements AgentManagerLocal {
 	@Override
 	public AgentCenter getAgentCenter() {
 		return host;
+	}
+
+	private boolean containsAgent(AID key) {
+		for (AID tmp : runningAgents.keySet()) {
+			if (tmp.getHost().equals(key.getHost()) && tmp.getName().equals(key.getName())
+					&& tmp.getType().equals(key.getType()))
+				return true;
+		}
+		return false;
 	}
 
 }
