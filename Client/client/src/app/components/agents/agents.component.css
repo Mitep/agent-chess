@@ -1,0 +1,21 @@
+table, form {
+    width:80%;
+}
+
+p {
+    border: 1px;
+    border-style: groove;
+    overflow: scroll;
+    height: 300px;
+}
+
+.start-agent:hover{
+    cursor: pointer;
+    background-color: #f2f2f2;
+}
+
+.tables {
+   margin:30px;
+   float:left;
+   width: 30%;
+}

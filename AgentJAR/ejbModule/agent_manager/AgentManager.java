@@ -129,8 +129,10 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public void startAgent(AID agent) {
-		if (containsAgent(agent)) {
+		AID a = containsAgent(agent);
+		if (a != null) {
 			System.out.println("Vec postoji agent s tim identifikatorom!");
+			return;
 		}
 
 		try {
@@ -159,8 +161,9 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public void stopAgent(AID agent) {
-		if (containsAgent(agent)) {
-			runningAgents.remove(agent);
+		AID a = containsAgent(agent);
+		if (a != null) {
+			runningAgents.remove(a);
 		} else {
 			System.out.println("Ne postoji agent s tim identifikatorom!");
 		}
@@ -181,13 +184,13 @@ public class AgentManager implements AgentManagerLocal {
 		return host;
 	}
 
-	private boolean containsAgent(AID key) {
+	private AID containsAgent(AID key) {
 		for (AID tmp : runningAgents.keySet()) {
-			if (tmp.getHost().equals(key.getHost()) && tmp.getName().equals(key.getName())
-					&& tmp.getType().equals(key.getType()))
-				return true;
+			if (tmp.getHost().getAlias().equals(key.getHost().getAlias()) && tmp.getHost().getAddress().equals(key.getHost().getAddress()) && tmp.getName().equals(key.getName())
+					&& tmp.getType().getName().equals(key.getType().getName()) && tmp.getType().getModule().equals(key.getType().getModule()))
+				return tmp;
 		}
-		return false;
+		return null;
 	}
 
 	public void setAgentCenter(AgentCenter c) {

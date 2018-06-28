@@ -9,7 +9,7 @@ public class AgentCenter {
 	
 	public AgentCenter(String address, String alias) {
 		this.address = address;
-		this .alias = alias;
+		this.alias = alias;
 	}
 	
 	public AgentCenter(String url) {
