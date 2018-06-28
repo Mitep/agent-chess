@@ -14,6 +14,12 @@ public class AgentType {
 		this.name = name;
 		this.module = module;
 	}
+	
+	public AgentType(String url) {
+		String[] s = url.split("$");
+		this.module = s[0];
+		this.name = s[1];
+	}
 
 	public String getName() {
 		return name;

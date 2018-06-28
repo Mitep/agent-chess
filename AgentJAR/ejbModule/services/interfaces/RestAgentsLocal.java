@@ -12,7 +12,7 @@ public interface RestAgentsLocal {
 
 	List<AgentType> getAgentsClasses();
 	List<AID> getAgentsRunning();
-	void putAgentsRunning(String type, String name);
-	void deleteAgentsRunning(String aid);
+	void putAgentsRunning(AgentType type, String name);
+	void deleteAgentsRunning(AID aid);
 	
 }
