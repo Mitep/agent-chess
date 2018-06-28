@@ -11,6 +11,12 @@ public class AgentCenter {
 		this.address = address;
 		this .alias = alias;
 	}
+	
+	public AgentCenter(String url) {
+		String[] s = url.split("\\$");
+		this.alias = s[0];
+		this.address = s[1];
+	}
 
 	public String getAddress() {
 		return address;

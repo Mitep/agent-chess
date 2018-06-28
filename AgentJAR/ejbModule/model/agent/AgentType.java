@@ -16,7 +16,7 @@ public class AgentType {
 	}
 	
 	public AgentType(String url) {
-		String[] s = url.split("$");
+		String[] s = url.split("\\$");
 		this.module = s[0];
 		this.name = s[1];
 	}

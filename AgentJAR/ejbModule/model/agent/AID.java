@@ -24,7 +24,7 @@ public class AID {
 	
 	public AID(String url) {
 		// ime_agenta$alias$address$type_name$type_module
-		String[] s = url.split("$");
+		String[] s = url.split("\\$");
 		this.name = s[0];
 		this.host = new AgentCenter(s[2], s[1]);
 		this.type = new AgentType(s[3], s[4]);

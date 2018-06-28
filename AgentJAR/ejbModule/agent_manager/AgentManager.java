@@ -1,6 +1,10 @@
 package agent_manager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +32,28 @@ public class AgentManager implements AgentManagerLocal {
 
 	@PostConstruct
 	private void initAgentManager() {
+		setHost();
+		
 		runningAgents = new HashMap<AID, AgentClass>();
 		initAgentTypes();
+	}
+	
+	private void setHost() {
+		final File configFile = new File(
+				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
+				+ "META-INF" + File.separator + "node_config.txt");
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(configFile));
+			String masterHost = br.readLine();	
+			String myHost = br.readLine();
+			
+			this.host = new AgentCenter(myHost);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initAgentTypes() {
@@ -58,7 +82,7 @@ public class AgentManager implements AgentManagerLocal {
 
 		if (f.isFile()) {
 			File parent = f.getParentFile();
-			String module = parent.getPath().substring(parent.getPath().indexOf("agents"));
+			String module = parent.getPath().substring(parent.getPath().lastIndexOf("agents"));
 			System.out.println(module);
 			module = module.replace(File.separatorChar, '.');
 			String name = f.getName();
@@ -148,4 +172,7 @@ public class AgentManager implements AgentManagerLocal {
 		return false;
 	}
 
+	public void setAgentCenter(AgentCenter c) {
+		this.host = c;
+	}
 }

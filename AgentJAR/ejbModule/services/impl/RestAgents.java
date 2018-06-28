@@ -46,6 +46,7 @@ public class RestAgents implements RestAgentsLocal {
 			Context context = new InitialContext();
 			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
 			AgentCenter ac = aml.getAgentCenter();
+			
 			if(type != null) {
 				AID aid = new AID(name, ac, type);
 				aml.startAgent(aid);	
