@@ -87,7 +87,6 @@ public class AgentManager implements AgentManagerLocal {
 		if (f.isFile()) {
 			File parent = f.getParentFile();
 			String module = parent.getPath().substring(parent.getPath().lastIndexOf("agents"));
-			System.out.println(module);
 			module = module.replace(File.separatorChar, '.');
 			String name = f.getName();
 			name = name.substring(0, name.indexOf("."));

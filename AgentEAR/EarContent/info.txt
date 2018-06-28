@@ -1,1 +1,0 @@
-Samo dok se ne ubaci nesto, da nam git ne obrise.
