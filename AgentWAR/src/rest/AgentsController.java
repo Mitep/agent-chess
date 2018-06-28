@@ -51,7 +51,8 @@ public class AgentsController {
 	
 	@PUT
 	@Path("/running/{type}/{name}")
-	public void startAgent(@PathParam("type") String type,@PathParam("name") String name) {
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void startAgent(@PathParam("type") AgentType type,@PathParam("name") String name) {
 		//  pokreni agenta sa zadatim imenom
 		try {
 			Context context = new InitialContext();
@@ -65,7 +66,7 @@ public class AgentsController {
 	@DELETE
 	@Path("/running/{aid}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void stopAgent(@PathParam("aid") String aid) {
+	public void stopAgent(@PathParam("aid") AID aid) {
 		// zaustavi odredjenog agenta
 		try {
 			Context context = new InitialContext();

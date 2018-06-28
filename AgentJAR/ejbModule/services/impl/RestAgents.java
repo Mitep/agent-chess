@@ -41,34 +41,30 @@ public class RestAgents implements RestAgentsLocal {
 	}
 
 	@Override
-	public void putAgentsRunning(String type, String name) {
+	public void putAgentsRunning(AgentType type, String name) {
 		try {
 			Context context = new InitialContext();
 			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
-			String[] ats = type.split(";");
-			AgentType at = aml.getAgentType(ats[0], ats[1]);
 			AgentCenter ac = aml.getAgentCenter();
-			
-			if(at != null) {
-				AID aid = new AID(name, ac, at);
+			if(type != null) {
+				AID aid = new AID(name, ac, type);
 				aml.startAgent(aid);	
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	@Override
-	public void deleteAgentsRunning(String aid) {
+	public void deleteAgentsRunning(AID aid) {
 		try {
 			Context context = new InitialContext();
 			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
-			
-			
+			aml.stopAgent(aid);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 }
