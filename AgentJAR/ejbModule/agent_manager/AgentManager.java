@@ -12,12 +12,17 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import model.acl.ACLMessage;
 import model.agent.AID;
 import model.agent.AgentClass;
 import model.agent.AgentType;
 import model.center.AgentCenter;
+import node_manager.NodeManagerLocal;
+import services.interfaces.WebSocketLocal;
 
 @Singleton
 @Startup
@@ -42,16 +47,15 @@ public class AgentManager implements AgentManagerLocal {
 		final File configFile = new File(
 				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
 				+ "META-INF" + File.separator + "node_config.txt");
-		
 		try {
+			@SuppressWarnings("resource")
 			BufferedReader br = new BufferedReader(new FileReader(configFile));
-			String masterHost = br.readLine();	
-			String myHost = br.readLine();
 			
-			this.host = new AgentCenter(myHost);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			@SuppressWarnings("unused")
+			String masterHost = br.readLine();
+			String thisHost = br.readLine();
+			this.host = new AgentCenter(thisHost);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -109,6 +113,14 @@ public class AgentManager implements AgentManagerLocal {
 		AgentClass receiver = runningAgents.get(agent);
 		if (receiver != null) {
 			receiver.handleMessage(msg);
+			
+			try {
+				Context context = new InitialContext();
+				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
+				//wsl.sendMessage(msg.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return true;
 		} else {
 			return false;
@@ -126,6 +138,10 @@ public class AgentManager implements AgentManagerLocal {
 			if (obj instanceof AgentClass) {
 				((AgentClass) obj).setId(agent);
 				runningAgents.put(agent, (AgentClass) obj);
+				
+				Context context = new InitialContext();
+				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
+				//wsl.sendMessage(msg.toString());
 			} else {
 				System.out.println("Agent tipa " + agent.getType() + " se ne moze dodati u mapu!");
 			}
@@ -134,6 +150,8 @@ public class AgentManager implements AgentManagerLocal {
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e ) {
 			e.printStackTrace();
 		}
 
