@@ -452,13 +452,9 @@
                     <jms-queue name="DLQ">
                         <entry name="java:/jms/queue/DLQ"/>
                     </jms-queue>
-                    <jms-queue name="agentQueue">
-                        <entry name="queue/agentQueue"/>
-                        <entry name="java:jboss/exported/jms/queue/agentQueue"/>
-                    </jms-queue>
-                    <jms-queue name="centerAppQueue">
-                        <entry name="queue/centerQueue"/>
-                        <entry name="java:jboss/exported/jms/queue/centerQueue"/>
+                    <jms-queue name="mdbConsumerQueue">
+                        <entry name="queue/mdbConsumerQueue"/>
+                        <entry name="java:jboss/exported/jms/queue/mdbConsumerQueue"/>
                     </jms-queue>
                 </jms-destinations>
             </hornetq-server>

@@ -51,13 +51,12 @@ public class AgentsController {
 	
 	@PUT
 	@Path("/running/{type}/{name}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void startAgent(@PathParam("type") AgentType type,@PathParam("name") String name) {
+	public void startAgent(@PathParam("type") String type,@PathParam("name") String name) {
 		//  pokreni agenta sa zadatim imenom
 		try {
 			Context context = new InitialContext();
 			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
-			ral.putAgentsRunning(type, name);
+			ral.putAgentsRunning(new AgentType(type), name);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -65,13 +64,12 @@ public class AgentsController {
 	
 	@DELETE
 	@Path("/running/{aid}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void stopAgent(@PathParam("aid") AID aid) {
+	public void stopAgent(@PathParam("aid") String aid) {
 		// zaustavi odredjenog agenta
 		try {
 			Context context = new InitialContext();
 			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
-			ral.deleteAgentsRunning(aid);
+			ral.deleteAgentsRunning(new AID(aid));
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
