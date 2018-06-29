@@ -3,7 +3,6 @@ package agents.contractnet;
 import javax.ejb.Stateful;
 
 import model.acl.ACLMessage;
-import model.acl.Performative;
 import model.agent.AgentClass;
 
 /**
@@ -23,15 +22,16 @@ public class ParticipantAgent extends AgentClass {
 		// TODO Auto-generated method stub
 		switch (poruka.getPerformative()) {
 		case cfp:
-
+			handleCFP(poruka);
 			break;
 		case reject_proposal:
-
+			handleRejectProposal(poruka);
 			break;
 		case accept_proposal:
-
+			handleAcceptProposal(poruka);
 			break;
 		default:
+			System.out.println("Unexpected message!");
 
 		}
 

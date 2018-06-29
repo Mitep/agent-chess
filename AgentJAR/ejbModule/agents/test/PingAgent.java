@@ -30,13 +30,13 @@ public class PingAgent extends AgentClass {
 				System.out.println("Error: Cannot locate host");
 				return;
 			}
-
 			receiver.setHost(host);
 
 			ACLMessage msg = new ACLMessage();
 			msg.setPerformative(Performative.request);
 			msg.setReceivers(new AID[] { receiver });
 			msg.setSender(this.getId());
+			msg.setContent(poruka.getContent());
 			JsonUtils.sendACL(msg);
 		} else if (poruka.getPerformative() == Performative.inform) {
 			System.out.println("Reply received from Pong");

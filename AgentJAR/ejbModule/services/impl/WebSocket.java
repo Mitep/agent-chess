@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.websocket.Session;
 
 import services.interfaces.WebSocketLocal;

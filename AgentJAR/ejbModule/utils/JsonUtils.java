@@ -30,7 +30,7 @@ public class JsonUtils {
 	public static String getACLMessageString(ACLMessage msg) {
 		JSONObject obj = new JSONObject();
 		obj.append("type", "acl_message");
-		obj.append("data", msg);
+		obj.append("data", new JSONObject(msg));
 		return obj.toString();
 	}
 
@@ -50,10 +50,10 @@ public class JsonUtils {
 			obj.append("type", "add_agent_type");
 		else
 			obj.append("type", "remove_agent_type");
-		obj.append("data", at);
+		obj.append("data", new JSONObject(at));
 		return obj.toString();
 	}
-	
+
 	public static String getNodeRequestType(String nodeRequest) {
 		JSONObject obj = new JSONObject(nodeRequest);
 		return obj.getString("type");
@@ -67,7 +67,7 @@ public class JsonUtils {
 		ac.setAlias(jdata.getString("alias"));
 		return ac;
 	}
-	
+
 	public static boolean sendACL(ACLMessage msg) {
 		try {
 

@@ -8,11 +8,14 @@ import java.util.List;
 import javax.ejb.Singleton;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import model.acl.ACLMessage;
 import model.agent.AID;
 import model.agent.AgentClass;
 import model.agent.AgentType;
+import model.center.AgentCenter;
+import node_manager.NodeManagerLocal;
 import services.interfaces.WebSocketLocal;
 import utils.JsonUtils;
 
@@ -20,23 +23,25 @@ import utils.JsonUtils;
 public class AgentManager implements AgentManagerLocal {
 
 	private HashMap<AID, AgentClass> runningAgents;
-	private List<AgentType> agentTypes;
+	private HashMap<AgentCenter, ArrayList<AgentType>> agentTypes;
 
 	@Override
-	public void startInit() {
+	public void startInit(AgentCenter center) {
 		runningAgents = new HashMap<AID, AgentClass>();
-		initAgentTypes();
+		initAgentTypes(center);
 	}
 
-	private void initAgentTypes() {
-		agentTypes = new ArrayList<AgentType>();
+	private void initAgentTypes(AgentCenter center) {
+		agentTypes = new HashMap<>();
 
 		final File basePackage = new File(
 				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
 						+ "agents");
 		System.out.println(AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
-		agentTypes = processFile(basePackage);
+		ArrayList<AgentType> agentTypesList = processFile(basePackage);
+
+		agentTypes.put(center, agentTypesList);
 	}
 
 	private ArrayList<AgentType> processFile(File f) {
@@ -68,7 +73,11 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public List<AgentType> getAgentTypes() {
-		return agentTypes;
+		ArrayList<AgentType> retVal = new ArrayList<>();
+		for (AgentCenter key : agentTypes.keySet()) {
+			retVal.addAll(agentTypes.get(key));
+		}
+		return retVal;
 	}
 
 	@Override
@@ -76,7 +85,7 @@ public class AgentManager implements AgentManagerLocal {
 		AgentClass receiver = runningAgents.get(agent);
 		if (receiver != null) {
 			receiver.handleMessage(msg);
-			
+
 			try {
 				Context context = new InitialContext();
 				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
@@ -103,14 +112,14 @@ public class AgentManager implements AgentManagerLocal {
 			if (obj instanceof AgentClass) {
 				((AgentClass) obj).setId(agent);
 				runningAgents.put(agent, (AgentClass) obj);
-				
+
 				Context context = new InitialContext();
 				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
 				wsl.sendMessage(JsonUtils.getAIDString(agent, true));
 			} else {
 				System.out.println("Agent tipa " + agent.getType() + " se ne moze dodati u mapu!");
 			}
-		} catch (Exception e ) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -135,9 +144,11 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public AgentType getAgentType(String name, String module) {
-		for (AgentType at : agentTypes) {
-			if (at.getName().equals(name) && at.getModule().equals(module)) {
-				return at;
+		for (AgentCenter ac : agentTypes.keySet()) {
+			for (AgentType at : agentTypes.get(ac)) {
+				if (at.getName().equals(name) && at.getModule().equals(module)) {
+					return at;
+				}
 			}
 		}
 		return null;
@@ -145,8 +156,10 @@ public class AgentManager implements AgentManagerLocal {
 
 	private AID containsAgent(AID key) {
 		for (AID tmp : runningAgents.keySet()) {
-			if (tmp.getHost().getAlias().equals(key.getHost().getAlias()) && tmp.getHost().getAddress().equals(key.getHost().getAddress()) && tmp.getName().equals(key.getName())
-					&& tmp.getType().getName().equals(key.getType().getName()) && tmp.getType().getModule().equals(key.getType().getModule()))
+			if (tmp.getHost().getAlias().equals(key.getHost().getAlias())
+					&& tmp.getHost().getAddress().equals(key.getHost().getAddress())
+					&& tmp.getName().equals(key.getName()) && tmp.getType().getName().equals(key.getType().getName())
+					&& tmp.getType().getModule().equals(key.getType().getModule()))
 				return tmp;
 		}
 		return null;
@@ -154,14 +167,51 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public void addAgentType(AgentType at) {
-		// TODO Auto-generated method stub
-		// dodati i javiti websocketom
+		try {
+			Context ctx = new InitialContext();
+			NodeManagerLocal nml = (NodeManagerLocal) ctx.lookup(NodeManagerLocal.LOOKUP);
+			AgentCenter center = nml.getThisNode();
+
+			if (agentTypes.get(center) != null) {
+				agentTypes.get(center).add(at);
+			} else {
+				ArrayList<AgentType> tmp = new ArrayList<AgentType>();
+				tmp.add(at);
+				agentTypes.put(center, tmp);
+			}
+			WebSocketLocal wsl = (WebSocketLocal) ctx.lookup(WebSocketLocal.LOOKUP);
+			wsl.sendMessage(JsonUtils.getAgentType(at, true));
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
 	public void deleteAgentType(AgentType at) {
-		// TODO Auto-generated method stub
-		// obrisati i javiti websocketom
+		try {
+			Context ctx = new InitialContext();
+			NodeManagerLocal nml = (NodeManagerLocal) ctx.lookup(NodeManagerLocal.LOOKUP);
+			AgentCenter center = nml.getThisNode();
+
+			if (agentTypes.get(center) != null) {
+				agentTypes.get(center).remove(at);
+			}
+
+			WebSocketLocal wsl = (WebSocketLocal) ctx.lookup(WebSocketLocal.LOOKUP);
+			wsl.sendMessage(JsonUtils.getAgentType(at, false));
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteTypesByNode(AgentCenter center) {
+		agentTypes.remove(center);
 	}
 
 }

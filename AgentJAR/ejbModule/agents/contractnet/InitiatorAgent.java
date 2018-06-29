@@ -18,7 +18,6 @@ public class InitiatorAgent extends AgentClass {
 	@Override
 	public void handleMessage(ACLMessage poruka) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -25,35 +25,34 @@ public class NodeManager implements NodeManagerLocal {
 	private List<AgentCenter> nodes;
 	private AgentCenter masterNode;
 	private AgentCenter thisNode;
-	
+
 	public NodeManager() {
 		nodes = new ArrayList<AgentCenter>();
 	}
-	
+
 	@PostConstruct
 	public void nodeInit() {
 		setAgentCentre();
 		try {
 			Context context = new InitialContext();
 			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
-			aml.startInit();
+			aml.startInit(getThisNode());
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(!masterNode.getAlias().equals(thisNode.getAlias())) {
+		if (!masterNode.getAlias().equals(thisNode.getAlias())) {
 			RestBuilder.contactMaster();
 		}
 	}
-	
+
 	private void setAgentCentre() {
 		final File configFile = new File(
 				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
-				+ "META-INF" + File.separator + "node_config.txt");
+						+ "META-INF" + File.separator + "node_config.txt");
 		try {
 			@SuppressWarnings("resource")
 			BufferedReader br = new BufferedReader(new FileReader(configFile));
-			
+
 			String masterHost = br.readLine();
 			String thisHost = br.readLine();
 			this.masterNode = new AgentCenter(masterHost);
@@ -80,8 +79,14 @@ public class NodeManager implements NodeManagerLocal {
 
 	@Override
 	public void deleteSlave(AgentCenter slave) {
-		// TODO Auto-generated method stub
-		// obirsati i node i sve njegove tipove agenata
+		try {
+			Context ctx = new InitialContext();
+			AgentManagerLocal agentManager = (AgentManagerLocal) ctx.lookup(AgentManagerLocal.LOOKUP);
+			agentManager.deleteTypesByNode(slave);
+			nodes.remove(slave);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -89,13 +94,13 @@ public class NodeManager implements NodeManagerLocal {
 		this.nodes.add(slave);
 		try {
 			Context context = new InitialContext();
-			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);			
-			for(AgentType a : slaveAgentTypes) {
+			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
+			for (AgentType a : slaveAgentTypes) {
 				aml.addAgentType(a);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
