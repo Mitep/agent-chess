@@ -2,9 +2,7 @@ package agent_manager;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,15 +12,14 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import model.acl.ACLMessage;
 import model.agent.AID;
 import model.agent.AgentClass;
 import model.agent.AgentType;
 import model.center.AgentCenter;
-import node_manager.NodeManagerLocal;
 import services.interfaces.WebSocketLocal;
+import utils.JsonUtils;
 
 @Singleton
 @Startup
@@ -116,7 +113,7 @@ public class AgentManager implements AgentManagerLocal {
 			try {
 				Context context = new InitialContext();
 				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
-				//wsl.sendMessage(msg.toString());
+				wsl.sendMessage(JsonUtils.getACLMessageString(msg));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -142,7 +139,7 @@ public class AgentManager implements AgentManagerLocal {
 				
 				Context context = new InitialContext();
 				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
-				//wsl.sendMessage(msg.toString());
+				wsl.sendMessage(JsonUtils.getAIDString(agent, true));
 			} else {
 				System.out.println("Agent tipa " + agent.getType() + " se ne moze dodati u mapu!");
 			}
@@ -163,6 +160,14 @@ public class AgentManager implements AgentManagerLocal {
 		AID a = containsAgent(agent);
 		if (a != null) {
 			runningAgents.remove(a);
+			Context context;
+			try {
+				context = new InitialContext();
+				WebSocketLocal wsl = (WebSocketLocal) context.lookup(WebSocketLocal.LOOKUP);
+				wsl.sendMessage(JsonUtils.getAIDString(agent, false));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else {
 			System.out.println("Ne postoji agent s tim identifikatorom!");
 		}
