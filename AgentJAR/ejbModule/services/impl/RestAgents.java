@@ -11,6 +11,7 @@ import agent_manager.AgentManagerLocal;
 import model.agent.AID;
 import model.agent.AgentType;
 import model.center.AgentCenter;
+import node_manager.NodeManagerLocal;
 import services.interfaces.RestAgentsLocal;
 
 @Stateless
@@ -45,7 +46,9 @@ public class RestAgents implements RestAgentsLocal {
 		try {
 			Context context = new InitialContext();
 			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
-			AgentCenter ac = aml.getAgentCenter();
+			
+			NodeManagerLocal nml = (NodeManagerLocal) context.lookup(NodeManagerLocal.LOOKUP);
+			AgentCenter ac = nml.getThisNode();
 			
 			if(type != null) {
 				AID aid = new AID(name, ac, type);

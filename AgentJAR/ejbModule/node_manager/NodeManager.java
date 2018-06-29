@@ -9,9 +9,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 import agent_manager.AgentManagerLocal;
+import model.agent.AgentType;
 import model.center.AgentCenter;
+import utils.RestBuilder;
 
 @Singleton
 @Startup
@@ -27,6 +31,13 @@ public class NodeManager implements NodeManagerLocal {
 	
 	@PostConstruct
 	public void nodeInit() {
+		setAgentCentre();
+		if(!masterNode.getAlias().equals(thisNode.getAlias())) {
+			RestBuilder.contactMaster();
+		}
+	}
+	
+	private void setAgentCentre() {
 		final File configFile = new File(
 				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
 				+ "META-INF" + File.separator + "node_config.txt");
@@ -51,6 +62,31 @@ public class NodeManager implements NodeManagerLocal {
 	@Override
 	public AgentCenter getThisNode() {
 		return thisNode;
+	}
+
+	@Override
+	public List<AgentCenter> getSlaves() {
+		return nodes;
+	}
+
+	@Override
+	public void deleteSlave(AgentCenter slave) {
+		// TODO Auto-generated method stub
+		// obirsati i node i sve njegove tipove agenata
+	}
+
+	@Override
+	public void addSlave(AgentCenter slave, List<AgentType> slaveAgentTypes) {
+		this.nodes.add(slave);
+		try {
+			Context context = new InitialContext();
+			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);			
+			for(AgentType a : slaveAgentTypes) {
+				aml.addAgentType(a);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

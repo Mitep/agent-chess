@@ -1,15 +1,11 @@
 package agent_manager;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
@@ -17,44 +13,19 @@ import model.acl.ACLMessage;
 import model.agent.AID;
 import model.agent.AgentClass;
 import model.agent.AgentType;
-import model.center.AgentCenter;
 import services.interfaces.WebSocketLocal;
 import utils.JsonUtils;
 
 @Singleton
-@Startup
 public class AgentManager implements AgentManagerLocal {
 
 	private HashMap<AID, AgentClass> runningAgents;
 	private List<AgentType> agentTypes;
-	private AgentCenter host;
 
-	public AgentManager() {
-	}
-
-	@PostConstruct
-	private void initAgentManager() {
-		setHost();
-		
+	@Override
+	public void startInit() {
 		runningAgents = new HashMap<AID, AgentClass>();
 		initAgentTypes();
-	}
-	
-	private void setHost() {
-		final File configFile = new File(
-				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
-				+ "META-INF" + File.separator + "node_config.txt");
-		try {
-			@SuppressWarnings("resource")
-			BufferedReader br = new BufferedReader(new FileReader(configFile));
-			
-			@SuppressWarnings("unused")
-			String masterHost = br.readLine();
-			String thisHost = br.readLine();
-			this.host = new AgentCenter(thisHost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void initAgentTypes() {
@@ -143,16 +114,9 @@ public class AgentManager implements AgentManagerLocal {
 			} else {
 				System.out.println("Agent tipa " + agent.getType() + " se ne moze dodati u mapu!");
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -183,11 +147,6 @@ public class AgentManager implements AgentManagerLocal {
 		return null;
 	}
 
-	@Override
-	public AgentCenter getAgentCenter() {
-		return host;
-	}
-
 	private AID containsAgent(AID key) {
 		for (AID tmp : runningAgents.keySet()) {
 			if (tmp.getHost().getAlias().equals(key.getHost().getAlias()) && tmp.getHost().getAddress().equals(key.getHost().getAddress()) && tmp.getName().equals(key.getName())
@@ -197,7 +156,16 @@ public class AgentManager implements AgentManagerLocal {
 		return null;
 	}
 
-	public void setAgentCenter(AgentCenter c) {
-		this.host = c;
+	@Override
+	public void addAgentType(AgentType at) {
+		// TODO Auto-generated method stub
+		// dodati i javiti websocketom
 	}
+
+	@Override
+	public void deleteAgentType(AgentType at) {
+		// TODO Auto-generated method stub
+		// obrisati i javiti websocketom
+	}
+
 }

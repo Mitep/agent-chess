@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import model.acl.ACLMessage;
 import model.agent.AID;
 import model.agent.AgentType;
+import model.center.AgentCenter;
 
 /**
  * @author Nikola
@@ -38,5 +39,19 @@ public class JsonUtils {
 		obj.append("data", at);
 		return obj.toString();
 	}
+	
+	public static String getNodeRequestType(String nodeRequest) {
+		JSONObject obj = new JSONObject(nodeRequest);
+		return obj.getString("type");
+	}
 
+	public static AgentCenter getNodeRequestSlaveAddres(String nodeRequest) {
+		JSONObject obj = new JSONObject(nodeRequest);
+		JSONObject jdata = obj.getJSONObject("data");
+		AgentCenter ac = new AgentCenter();
+		ac.setAddress(jdata.getString("address"));
+		ac.setAlias(jdata.getString("alias"));
+		return ac;
+	}
+	
 }
