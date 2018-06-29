@@ -37,10 +37,6 @@ public class AgentManager implements AgentManagerLocal {
 		System.out.println(AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
 		agentTypes = processFile(basePackage);
-
-		for (AgentType at : agentTypes) {
-			System.out.println(at);
-		}
 	}
 
 	private ArrayList<AgentType> processFile(File f) {
