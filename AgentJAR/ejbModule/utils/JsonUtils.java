@@ -40,7 +40,7 @@ public class JsonUtils {
 			obj.append("type", "start_agent");
 		else
 			obj.append("type", "stop_agent");
-		obj.append("data", aid);
+		obj.append("data", new JSONObject(aid));
 		return obj.toString();
 	}
 

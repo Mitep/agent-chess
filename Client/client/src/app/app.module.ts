@@ -9,6 +9,7 @@ import { ChessComponent } from './components/chess/chess.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AgentsComponent } from './components/agents/agents.component';
 import { RestService } from './services/rest.service';
+import { WebsocketService } from './services/websocket.service';
 
 const appRoutes : Routes = [
   { path: '', component: AgentsComponent },
@@ -29,7 +30,10 @@ const appRoutes : Routes = [
     FormsModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [RestService],
+  providers: [
+    RestService,
+    WebsocketService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

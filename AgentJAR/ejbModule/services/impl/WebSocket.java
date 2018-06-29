@@ -9,7 +9,6 @@ import javax.websocket.Session;
 
 import services.interfaces.WebSocketLocal;
 
-@Startup
 @Singleton
 public class WebSocket implements WebSocketLocal {
 

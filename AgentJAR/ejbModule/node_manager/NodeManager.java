@@ -11,6 +11,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import agent_manager.AgentManagerLocal;
 import model.agent.AgentType;
@@ -32,6 +33,14 @@ public class NodeManager implements NodeManagerLocal {
 	@PostConstruct
 	public void nodeInit() {
 		setAgentCentre();
+		try {
+			Context context = new InitialContext();
+			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
+			aml.startInit();
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(!masterNode.getAlias().equals(thisNode.getAlias())) {
 			RestBuilder.contactMaster();
 		}

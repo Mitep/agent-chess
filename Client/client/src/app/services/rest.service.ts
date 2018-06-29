@@ -12,27 +12,27 @@ export class RestService {
 
   constructor(private http: HttpClient) { }
 
-  getAgentTypes():Observable<AType[]> {
+  getAgentTypes(): Observable<AType[]> {
     return this.http.get<AType[]>('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/classes');
   }
 
-  getRunningAgents():Observable<AID[]> {
+  getRunningAgents(): Observable<AID[]> {
     return this.http.get<AID[]>('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/running');
   }
 
-  startAgent(agent){
-    return this.http.put('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/running/'+agent,"");
+  startAgent(agent) {
+    return this.http.put('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/running/' + agent, "");
   }
 
-  stopAgent(agent){
-    return this.http.delete('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/running/'+agent);
+  stopAgent(agent) {
+    return this.http.delete('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/running/' + agent);
   }
 
-  sendACLMessage(){
+  sendACLMessage() {
 
   }
 
-  getPerformative():Observable<string[]>{
+  getPerformative(): Observable<string[]> {
     return this.http.get<string[]>('http://' + host + ':' + port + '/AgentWAR/agent-app/messages');
   }
 

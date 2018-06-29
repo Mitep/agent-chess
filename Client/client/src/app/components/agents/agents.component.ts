@@ -3,6 +3,7 @@ import { AID } from '../../interfaces/aid';
 import { AType } from '../../interfaces/atype';
 import { RestService } from '../../services/rest.service';
 import * as $ from 'jquery/dist/jquery.min.js';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-agents',
@@ -11,22 +12,19 @@ import * as $ from 'jquery/dist/jquery.min.js';
 })
 export class AgentsComponent implements OnInit {
 
-  agentTypes: AType[] = [];
-  performatives: string[] = [];
-  runningAgents: AID[] = [];
-
-  constructor(private restService: RestService) { }
+  constructor(private restService: RestService, private ws:WebsocketService) { }
 
   ngOnInit() {
     this.restService.getAgentTypes().subscribe(res => {
-      this.agentTypes = res;
+      console.log("tipovi " + res);
+      this.ws.agentTypes = res;
     });
     this.restService.getPerformative().subscribe(res => {
-      this.performatives = res;
+      this.ws.performatives = res;
     });
     this.restService.getRunningAgents().subscribe(res => {
-      console.log(res);
-      this.runningAgents = res;
+      console.log("running agents: " + res);
+      this.ws.runningAgents = res;
     });
   }
 

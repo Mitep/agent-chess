@@ -6,7 +6,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="start-agent" *ngFor="let type of agentTypes">
+      <tr class="start-agent" *ngFor="let type of this.ws.agentTypes">
         <td data-toggle="modal" [attr.data-target]="'#' + type.name">{{type.name}} {{type.module}}</td>
 
         <div class="modal" id={{type.name}}>
@@ -45,7 +45,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let agent of runningAgents">
+      <tr *ngFor="let agent of this.ws.runningAgents">
         <td>{{agent.name}}@{{agent.type.name}}
           <button class="btn btn-danger" style="float:right" (click)="stopAgent(agent)">Stop</button>
         </td>
@@ -67,19 +67,19 @@
       <label class="control-label" for="selectbasic">Sender:</label>
       <select id="selectbasic" [(ngModel)]="message.sender" name="sender" class="form-control">
         <option></option>
-        <option *ngFor="let agent of runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
+        <option *ngFor="let agent of this.ws.runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
       </select>
-
+    
       <label class="control-label" for="selectbasic">Receiver:</label>
       <select id="selectbasic" [(ngModel)]="message.receiver" name="receiver" class="form-control">
         <option></option>
-        <option *ngFor="let agent of runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
+        <option *ngFor="let agent of this.ws.runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
       </select>
 
       <label class="control-label" for="selectbasic">Reply to:</label>
       <select id="selectbasic" [(ngModel)]="message.replyto" name="replyto" class="form-control">
         <option></option>
-        <option *ngFor="let agent of runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
+        <option *ngFor="let agent of this.ws.runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
       </select>
 
       <label class="control-label" for="selectbasic">Content:</label>

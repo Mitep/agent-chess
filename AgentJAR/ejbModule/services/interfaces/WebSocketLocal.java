@@ -6,7 +6,7 @@ import javax.websocket.Session;
 @Local
 public interface WebSocketLocal {
 
-	public static String LOOKUP = "java:app/WebSocket!services.interfaces.WebSocketLocal";
+	public static String LOOKUP = "java:app/AgentJAR/WebSocket!services.interfaces.WebSocketLocal";
 	
 	public void sendMessage(String msg) throws Exception;
 	public void onOpen(Session session) throws Exception;
