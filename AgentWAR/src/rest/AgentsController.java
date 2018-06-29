@@ -5,8 +5,10 @@ import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -33,7 +35,22 @@ public class AgentsController {
 			return null;
 		}
 	}
-
+	
+	@POST
+	@Path("/classes")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void newAgentTypes(List<AgentType> newTypes) {
+		try {
+			Context context = new InitialContext();
+			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
+			for(AgentType a : newTypes) {
+				ral.addAgentType(a);
+			}
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@GET
 	@Path("/running")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -45,6 +62,21 @@ public class AgentsController {
 		} catch (NamingException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	@POST
+	@Path("/running")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void addRunningAgents(List<AID> runningAgents) {
+		try {
+			Context context = new InitialContext();
+			RestAgentsLocal ral = (RestAgentsLocal) context.lookup("java:app/AgentJAR/RestAgents!services.interfaces.RestAgentsLocal");
+			for(AID a : runningAgents) {
+				ral.addRunningAgent(a);
+			}
+		} catch (NamingException e) {
+			e.printStackTrace();
 		}
 	}
 	

@@ -52,7 +52,19 @@ public class RestNode implements RestNodeLocal {
 	}
 
 	@Override
-	public void contactMaster(AgentCenter slaveAddr) {
+	public void newSlaveNode(AgentCenter newSlave) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newSlavesNode(List<AgentCenter> slaves) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteNode(String alias) {
 		// TODO Auto-generated method stub
 		
 	}

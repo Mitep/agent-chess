@@ -1,5 +1,7 @@
 package services.interfaces;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
 import model.center.AgentCenter;
@@ -12,7 +14,12 @@ public interface RestNodeLocal {
 	// master trazi listu tipova agenata od slavea
 	void connectSlave(AgentCenter slaveAddr);
 	
-	// post node 
-	void contactMaster(AgentCenter slaveAddr);
+	// master salje novi cvor ostalim cvorovima
+	void newSlaveNode(AgentCenter newSlave);
+	
+	// master salje novom cvoru ostale cvorove
+	void newSlavesNode(List<AgentCenter> slaves);
+	
+	void deleteNode(String alias);
 	
 }
