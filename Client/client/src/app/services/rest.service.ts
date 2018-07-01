@@ -10,6 +10,12 @@ const host: string = "localhost";
 @Injectable()
 export class RestService {
 
+  config = {
+    headers: {
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    }
+  }
   constructor(private http: HttpClient) { }
 
   getAgentTypes(): Observable<AType[]> {
@@ -28,8 +34,8 @@ export class RestService {
     return this.http.delete('http://' + host + ':' + port + '/AgentWAR/agent-app/agents/running/' + agent);
   }
 
-  sendACLMessage() {
-
+  sendACLMessage(aclMessage) {
+    return this.http.post('http://' + host + ':' + port + '/AgentWAR/agent-app/messages', aclMessage, this.config);
   }
 
   getPerformative(): Observable<string[]> {

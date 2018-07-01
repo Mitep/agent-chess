@@ -59,22 +59,25 @@
     <fieldset>
 
       <label class=" control-label" for="selectbasic">Performative:</label>
-      <select id="selectbasic" [(ngModel)]="message.performative" name="performative" class="form-control">
+      <select id="selectbasic" [(ngModel)]="message.performative" name="performative" class="form-control" required>
         <option></option>
-        <option *ngFor="let performative of performatives" value={{performative}}>{{performative}}</option>
+        <option *ngFor="let performative of this.ws.performatives" value={{performative}}>{{performative}}</option>
       </select>
 
       <label class="control-label" for="selectbasic">Sender:</label>
       <select id="selectbasic" [(ngModel)]="message.sender" name="sender" class="form-control">
         <option></option>
-        <option *ngFor="let agent of this.ws.runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
+        <option *ngFor="let agent of this.ws.runningAgents" value="{{agent.name + '$' + agent.type.name + '$' + agent.type.module +'$'+ agent.host.alias +'$'+agent.host.address}}">{{agent.name}}@{{agent.type.name}}</option>
       </select>
-    
-      <label class="control-label" for="selectbasic">Receiver:</label>
-      <select id="selectbasic" [(ngModel)]="message.receiver" name="receiver" class="form-control">
-        <option></option>
-        <option *ngFor="let agent of this.ws.runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
-      </select>
+
+
+      <div class="form-group">
+        <label class="control-label" for="selectmultiple">Receivers:</label>
+        <select id="selectmultiple" [(ngModel)]="message.receivers" name="receivers" class="form-control" multiple="multiple" required>
+          <option></option>
+          <option *ngFor="let agent of this.ws.runningAgents" value="{{agent.name + '$' + agent.type.name + '$' + agent.type.module +'$'+ agent.host.alias +'$'+agent.host.address}}">{{agent.name}}@{{agent.type.name}}</option>
+        </select>
+      </div>
 
       <label class="control-label" for="selectbasic">Reply to:</label>
       <select id="selectbasic" [(ngModel)]="message.replyto" name="replyto" class="form-control">
@@ -87,6 +90,9 @@
 
       <label class="control-label" for="selectbasic">Language:</label>
       <input type="text" [(ngModel)]="message.language" name="language" class="form-control">
+
+      <label class="control-label" for="selectbasic">Encoding:</label>
+      <input type="text" [(ngModel)]="message.encoding" name="encoding" class="form-control">
 
       <label class="control-label" for="selectbasic">Ontology:</label>
       <input type="text" [(ngModel)]="message.ontology" name="ontology" class="form-control">
@@ -106,7 +112,11 @@
       <label class="control-label" for="selectbasic">Reply by:</label>
       <input type="text" [(ngModel)]="message.replyby" name="replyby" class="form-control">
 
-      <button class="btn btn-success" (click)="sendMessage(message)">Send</button>
+      <button class="btn btn-success" [disabled]="!message.valid" (click)="sendMessage(message)">Send</button>
     </fieldset>
   </form>
+</div>
+<button id="clear" class="btn btn-success" (click)="clearConsole()">Clear console</button>
+<div id="console">
+  <div *ngFor="let message of this.ws.messages">{{message}}</div>
 </div>
