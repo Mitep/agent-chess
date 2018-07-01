@@ -103,4 +103,33 @@ public class NodeManager implements NodeManagerLocal {
 		}
 	}
 
+	@Override
+	public void addSlave(AgentCenter slave) {
+		this.nodes.add(slave);
+	}
+
+	@Override
+	public void addSlaveAgentTypes(AgentCenter slave, List<AgentType> slaveAgentTypes) {
+		try {
+			Context context = new InitialContext();
+			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
+			for (AgentType a : slaveAgentTypes) {
+				aml.addAgentType(a);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteSlave(String alias) {
+		for(AgentCenter a : this.nodes) {
+			if(a.getAlias().equals(alias))
+				this.nodes.remove(a);
+		}
+		
+	}
+	
+	
+
 }

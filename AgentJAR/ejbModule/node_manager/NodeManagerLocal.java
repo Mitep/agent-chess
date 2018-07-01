@@ -16,6 +16,9 @@ public interface NodeManagerLocal {
 	AgentCenter getThisNode();
 	List<AgentCenter> getSlaves();
 	void deleteSlave(AgentCenter slave);
+	void deleteSlave(String alias);
 	void addSlave(AgentCenter slave, List<AgentType> slaveAgentTypes);
+	void addSlave(AgentCenter slave);
+	void addSlaveAgentTypes(AgentCenter slave, List<AgentType> slaveAgentTypes);
 	
 }
