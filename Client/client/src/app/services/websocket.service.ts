@@ -9,7 +9,8 @@ export class WebsocketService {
   ws: WebSocket;
   agentTypes: AType[] = [];
   performatives: string[] = [];
-  public runningAgents: AID[] = [];
+  runningAgents: AID[] = [];
+  messages: string[] =[];
 
   constructor() { }
 
@@ -23,14 +24,32 @@ export class WebsocketService {
       var type = json.type;
       var data = json.data;
       console.log("type: " + type);
+      let date = new Date();
+      let now = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + " - ";
+      w.messages.push(now + message.data);
+
       if (type == "start_agent") {
         let aType = { name: data[0].type.name, module: data[0].type.module };
         let aHost = { alias: data[0].host.alias, address: data[0].host.address };
         let aid = { name: data[0].name, host: aHost, type: aType };
         w.runningAgents.push(aid);
       } else if (type == "stop_agent") {
+        for (var i = 0; i < w.runningAgents.length; i++) {
+          if (w.runningAgents[i].name == data[0].name && w.runningAgents[i].host.alias == data[0].host.alias
+            && w.runningAgents[i].host.address == data[0].host.address && w.runningAgents[i].type.name == data[0].type.name
+            && w.runningAgents[i].type.module == data[0].type.module) {
+            w.runningAgents.splice(i, 1);
+          }
+        }
+      } else if (type == "add_agent_type") {
+
+      } else if (type == "remove_agent_type") {
+
+      } else if (type == "acl_message") {
 
       }
+
+
     };
   }
 }

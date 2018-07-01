@@ -19,7 +19,6 @@ public class NodeController {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public void connectNodes(AgentCenter request) {
 		try {
 			Context context = new InitialContext();
