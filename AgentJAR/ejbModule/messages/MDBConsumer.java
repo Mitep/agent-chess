@@ -5,6 +5,7 @@ import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -35,8 +36,10 @@ public class MDBConsumer implements MessageListener {
 	 */
 	public void onMessage(Message message) {
 		try {
-			ACLMessage msg = (ACLMessage) message.getObjectProperty("acl_message");
+			ACLMessage msg = (ACLMessage) ((ObjectMessage) message).getObject(); // (ACLMessage)
+																					// message.getObjectProperty("acl_message");
 			AID[] receivers = msg.getReceivers();
+			System.out.println(receivers[0]);
 
 			Context context = new InitialContext();
 			AgentManagerLocal manager = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);

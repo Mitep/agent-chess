@@ -28,7 +28,11 @@ public class RestBuilder {
 	        
 	        rest.connectNodes(nml.getThisNode());
 	    } catch (Exception e) {
-			e.printStackTrace();
+	    	 System.out.println("Cause: " + e.getCause());
+	         System.out.println("Message: " + e.getMessage());
+	         System.out.println("Class: " + e.getClass());
+	         System.out.println("StackTrace: " + e.getStackTrace());
+			//e.printStackTrace();
 		}
 	}
 	

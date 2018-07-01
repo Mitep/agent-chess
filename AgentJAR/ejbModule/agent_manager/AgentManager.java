@@ -82,7 +82,8 @@ public class AgentManager implements AgentManagerLocal {
 
 	@Override
 	public boolean msgToAgent(AID agent, ACLMessage msg) {
-		AgentClass receiver = runningAgents.get(agent);
+		AID proba = containsAgent(agent);
+		AgentClass receiver = runningAgents.get(proba);
 		if (receiver != null) {
 			receiver.handleMessage(msg);
 

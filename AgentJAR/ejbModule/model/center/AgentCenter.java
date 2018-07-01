@@ -1,17 +1,24 @@
 package model.center;
 
-public class AgentCenter {
+import java.io.Serializable;
 
+public class AgentCenter implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String address;
 	private String alias;
-	
-	public AgentCenter() {}
-	
+
+	public AgentCenter() {
+	}
+
 	public AgentCenter(String address, String alias) {
 		this.address = address;
 		this.alias = alias;
 	}
-	
+
 	public AgentCenter(String url) {
 		String[] s = url.split("\\$");
 		this.alias = s[0];
@@ -33,5 +40,5 @@ public class AgentCenter {
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-	
+
 }

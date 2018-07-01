@@ -14,7 +14,7 @@ public class ACLMessage implements Serializable {
 	private Performative performative;
 	private AID sender;
 	private AID[] receivers;
-	private AID repolyTo;
+	private AID replyTo;
 	private String content;
 	private HashMap<String, Object> userArgs;
 	private String language;
@@ -50,12 +50,12 @@ public class ACLMessage implements Serializable {
 		this.receivers = receivers;
 	}
 
-	public AID getRepolyTo() {
-		return repolyTo;
+	public AID getReplyTo() {
+		return replyTo;
 	}
 
-	public void setRepolyTo(AID repolyTo) {
-		this.repolyTo = repolyTo;
+	public void setReplyTo(AID repolyTo) {
+		this.replyTo = repolyTo;
 	}
 
 	public String getContent() {

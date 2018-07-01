@@ -32,11 +32,11 @@ public class PingAgent extends AgentClass {
 				return;
 			}
 			receiver.setHost(host);
-
+			System.out.println("receiver -> " + receiver.toString());
 			ACLMessage msg = new ACLMessage();
 			msg.setPerformative(Performative.request);
 			msg.setReceivers(new AID[] { receiver });
-			msg.setSender(this.getId());
+			msg.setSender(this.getId()); // samo Id
 			msg.setContent(poruka.getContent());
 			MessageBuilder.sendACL(msg);
 		} else if (poruka.getPerformative() == Performative.inform) {
