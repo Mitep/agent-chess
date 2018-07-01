@@ -21,7 +21,7 @@ public class AID {
 		this.host = host;
 		this.type = type;
 	}
-	
+
 	public AID(String url) {
 		// ime_agenta$alias$address$type_name$type_module
 		String[] s = url.split("\\$");
@@ -54,4 +54,9 @@ public class AID {
 		this.host = host;
 	}
 
+	@Override
+	public String toString() {
+		//TODO override host.toString()
+		return name + "$" + type + "@" + host.getAlias();
+	}
 }

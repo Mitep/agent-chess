@@ -12,7 +12,7 @@ import model.agent.AgentClass;
 import model.agent.AgentType;
 import model.center.AgentCenter;
 import node_manager.NodeManagerLocal;
-import utils.JsonUtils;
+import utils.MessageBuilder;
 
 @Stateful
 public class PingAgent extends AgentClass {
@@ -21,6 +21,7 @@ public class PingAgent extends AgentClass {
 	public void handleMessage(ACLMessage poruka) {
 		if (poruka.getPerformative() == Performative.request) {
 
+			// sadrzaj poruke je ime pong agenta
 			AID receiver = new AID();
 			receiver.setName(poruka.getContent());
 			AgentType type = new AgentType(PongAgent.class.getSimpleName(), PongAgent.class.getPackage().getName());
@@ -37,10 +38,10 @@ public class PingAgent extends AgentClass {
 			msg.setReceivers(new AID[] { receiver });
 			msg.setSender(this.getId());
 			msg.setContent(poruka.getContent());
-			JsonUtils.sendACL(msg);
+			MessageBuilder.sendACL(msg);
 		} else if (poruka.getPerformative() == Performative.inform) {
-			System.out.println("Reply received from Pong");
-
+			System.out.println("Reply received from Pong " + poruka.getSender());
+			System.out.println("Reply content: " + poruka.getContent());
 		}
 	}
 
