@@ -40,8 +40,8 @@ public class NodeManager implements NodeManagerLocal {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
-		if (!masterNode.getAlias().equals(thisNode.getAlias())) {
-			RestBuilder.contactMaster();
+		if (!masterNode.getAddress().equals(thisNode.getAddress())) {
+			RestBuilder.contactMaster(masterNode, thisNode);
 		}
 	}
 
