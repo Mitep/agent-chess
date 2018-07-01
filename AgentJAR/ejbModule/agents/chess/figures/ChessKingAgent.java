@@ -1,4 +1,4 @@
-package agents.chess;
+package agents.chess.figures;
 
 import model.acl.ACLMessage;
 import model.agent.AgentClass;

@@ -1,9 +1,9 @@
-package agents.chess;
+package agents.chess.figures;
 
 import model.acl.ACLMessage;
 import model.agent.AgentClass;
 
-public class ChessPawnAgent extends AgentClass {
+public class ChessBishopAgent extends AgentClass {
 
 	@Override
 	public void handleMessage(ACLMessage poruka) {
