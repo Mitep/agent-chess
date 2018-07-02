@@ -42,13 +42,10 @@ export class AgentsComponent implements OnInit {
 
   sendMessage(message) {
     if (message.sender == undefined) {
-      message.sender = "";
+      message.sender = null;
     }
     if (message.replyto == undefined) {
-      message.replyto = "";
-    }
-    if (message.sender == undefined) {
-      message.sender = "";
+      message.replyto = null;
     }
     if (message.content == undefined) {
       message.content = "";
@@ -78,10 +75,22 @@ export class AgentsComponent implements OnInit {
       message.replyby = "";
     }
 
-    let sender = message.sender.split("$");
-    let senderType = "{\"name\":\"" + sender[1] + "\",\"module\":\"" + sender[2] + "\"}";
-    let senderHost = "{\"alias\":\"" + sender[3] + "\",\"address\":\"" + sender[4] + "\"}";
-
+    if (message.sender != undefined) {
+      var sender = message.sender.split("$");
+      var senderType = "{\"name\":\"" + sender[1] + "\",\"module\":\"" + sender[2] + "\"}";
+      var senderHost = "{\"alias\":\"" + sender[3] + "\",\"address\":\"" + sender[4] + "\"}";
+      message.sender = "{\"name\":\"" + sender[0] + "\","
+      + " \"host\":" + senderHost + ","
+      + " \"type\":" + senderType + "}"
+    }
+    if (message.replyto != undefined) {
+      var replyTo = message.replyto.split("$");
+      var replyToType = "{\"name\":\"" + replyTo[1] + "\",\"module\":\"" + replyTo[2] + "\"}";
+      var replyToHost = "{\"alias\":\"" + replyTo[3] + "\",\"address\":\"" + replyTo[4] + "\"}";
+      message.replyto = "{\"name\":\"" + replyTo[0] + "\","
+      + " \"host\":" + replyToHost + ","
+      + " \"type\":" + replyToType + "}"
+    }
     var receivers = "";
 
     for (var i = 0; i < message.receivers.length; i++) {
@@ -98,11 +107,9 @@ export class AgentsComponent implements OnInit {
     }
 
     let aclMsg = "{\"performative\":\"" + message.performative + "\","
-      + " \"sender\":{\"name\":\"" + sender[0] + "\","
-      + " \"host\":" + senderHost + ","
-      + " \"type\":" + senderType + "},"
+      + " \"sender\":"+message.sender+","
       + " \"receivers\":[" + receivers + "],"
-      + " \"replyTo\":\"" + message.replyto + "\","
+      + " \"replyTo\":"+message.replyto+","
       + " \"content\":\"" + message.content + "\","
       + " \"language\":\"" + message.language + "\","
       + " \"encoding\":\"" + message.encoding + "\","
@@ -113,8 +120,13 @@ export class AgentsComponent implements OnInit {
       + " \"inReplyTo\":\"" + message.inreplyto + "\","
       + " \"replyBy\":\"" + message.replyby + "\"}";
 
-      console.log(aclMsg);
-    this.restService.sendACLMessage(aclMsg).subscribe(res => console.log(res));
+    console.log(aclMsg);
+    this.restService.sendACLMessage(aclMsg).subscribe(res => {
+      console.log(res);
+      message.sender = null;
+      message.replyto = null;
+    
+    });
   }
 
   clearConsole() {

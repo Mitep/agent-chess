@@ -25,6 +25,7 @@ export class WebsocketService {
       var data = json.data;
       console.log("type: " + type);
       let date = new Date();
+     
       let now = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + " - ";
       w.messages.push(now + message.data);
 
