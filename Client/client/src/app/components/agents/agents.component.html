@@ -82,7 +82,7 @@
       <label class="control-label" for="selectbasic">Reply to:</label>
       <select id="selectbasic" [(ngModel)]="message.replyto" name="replyto" class="form-control">
         <option></option>
-        <option *ngFor="let agent of this.ws.runningAgents" value={{agent.name}}>{{agent.name}}@{{agent.type.name}}</option>
+        <option *ngFor="let agent of this.ws.runningAgents" value="{{agent.name + '$' + agent.type.name + '$' + agent.type.module +'$'+ agent.host.alias +'$'+agent.host.address}}">{{agent.name}}@{{agent.type.name}}</option>
       </select>
 
       <label class="control-label" for="selectbasic">Content:</label>
@@ -111,8 +111,8 @@
 
       <label class="control-label" for="selectbasic">Reply by:</label>
       <input type="text" [(ngModel)]="message.replyby" name="replyby" class="form-control">
-
-      <button class="btn btn-success" [disabled]="!message.valid" (click)="sendMessage(message)">Send</button>
+      <br>
+      <button id="send" class="btn btn-success" [disabled]="!message.valid" (click)="sendMessage(message)">Send</button>
     </fieldset>
   </form>
 </div>
