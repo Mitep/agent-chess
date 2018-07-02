@@ -16,6 +16,7 @@ public class ACLMessage implements Serializable {
 	private AID[] receivers;
 	private AID replyTo;
 	private String content;
+	private Object contentObj;
 	private HashMap<String, Object> userArgs;
 	private String language;
 	private String encoding;
@@ -64,6 +65,14 @@ public class ACLMessage implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Object getContentObj() {
+		return contentObj;
+	}
+
+	public void setContentObj(Object contentObj) {
+		this.contentObj = contentObj;
 	}
 
 	public HashMap<String, Object> getUserArgs() {

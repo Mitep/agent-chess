@@ -24,6 +24,7 @@ public class PingAgent extends AgentClass {
 			// sadrzaj poruke je ime pong agenta
 			AID receiver = new AID();
 			receiver.setName(poruka.getContent());
+			System.out.println("Request to send message to " + poruka.getContent() + " Pong.");
 			AgentType type = new AgentType(PongAgent.class.getSimpleName(), PongAgent.class.getPackage().getName());
 			receiver.setType(type);
 			AgentCenter host = lookupHost();
@@ -32,7 +33,6 @@ public class PingAgent extends AgentClass {
 				return;
 			}
 			receiver.setHost(host);
-			System.out.println("receiver -> " + receiver.toString());
 			ACLMessage msg = new ACLMessage();
 			msg.setPerformative(Performative.request);
 			msg.setReceivers(new AID[] { receiver });

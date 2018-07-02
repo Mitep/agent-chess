@@ -37,7 +37,6 @@ public class AgentManager implements AgentManagerLocal {
 		final File basePackage = new File(
 				AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath() + File.separator
 						+ "agents");
-		System.out.println(AgentManagerLocal.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
 		ArrayList<AgentType> agentTypesList = processFile(basePackage);
 

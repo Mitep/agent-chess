@@ -36,10 +36,8 @@ public class MDBConsumer implements MessageListener {
 	 */
 	public void onMessage(Message message) {
 		try {
-			ACLMessage msg = (ACLMessage) ((ObjectMessage) message).getObject(); // (ACLMessage)
-																					// message.getObjectProperty("acl_message");
+			ACLMessage msg = (ACLMessage) ((ObjectMessage) message).getObject();
 			AID[] receivers = msg.getReceivers();
-			System.out.println(receivers[0]);
 
 			Context context = new InitialContext();
 			AgentManagerLocal manager = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);

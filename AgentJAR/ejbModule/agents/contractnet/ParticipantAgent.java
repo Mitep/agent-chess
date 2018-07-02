@@ -1,7 +1,5 @@
 package agents.contractnet;
 
-import java.util.Random;
-
 import javax.ejb.Stateful;
 
 import model.acl.ACLMessage;
@@ -24,7 +22,6 @@ public class ParticipantAgent extends AgentClass {
 	 */
 	@Override
 	public void handleMessage(ACLMessage poruka) {
-		// TODO Auto-generated method stub
 		switch (poruka.getPerformative()) {
 		case cfp:
 			handleCFP(poruka);
@@ -37,48 +34,54 @@ public class ParticipantAgent extends AgentClass {
 			break;
 		default:
 			System.out.println("Unexpected message!");
-
 		}
-
 	}
 
 	private void handleCFP(ACLMessage msg) {
-		if (Math.random() > 0.5) {
-			System.out.println("Refusing to bid.");
-			ACLMessage reply = new ACLMessage();
+		ACLMessage reply = new ACLMessage();
+		reply.setSender(Id);
+		if (Math.random() < 0.4) {
+			System.out.println(Id + ": refusing to participate.");
 			reply.setPerformative(Performative.refuse);
 			reply.setReceivers(new AID[] { msg.getSender() });
-			MessageBuilder.sendACL(reply);
 		} else {
-			System.out.println("Let's bid.");
-			int bid = new Random().nextInt(250);
-			ACLMessage reply = new ACLMessage();
-			reply.setPerformative(Performative.refuse);
+			System.out.println(Id + ": accepting.");
+			reply.setPerformative(Performative.propose);
 			reply.setReceivers(new AID[] { msg.getSender() });
-			reply.setContent(Integer.toString(bid));
+		}
+
+		if (msg.getReplyBy() < System.currentTimeMillis()) {
+			System.out.println(Id + ": failed to reply by deadline. Discarding reply.");
+		} else {
 			MessageBuilder.sendACL(reply);
 		}
 	}
 
 	private void handleRejectProposal(ACLMessage msg) {
-		System.out.print("Agent: " + Id + " -> bid rejected");
+		System.out.println(Id + ": rejected by initiator");
 	}
 
 	private void handleAcceptProposal(ACLMessage msg) {
-		int status = new Random().nextInt(4);
 		ACLMessage reply = new ACLMessage();
 		reply.setSender(Id);
 		reply.setReceivers(new AID[] { msg.getSender() });
 
-		if (status == 0) {
-			reply.setPerformative(Performative.failure);
-			System.out
-					.print("Agent: " + Id + " -> bid was accepted, but can't confirm his bid, resulting in a failure.");
-		} else {
-			reply.setPerformative(Performative.inform);
-			System.out.print("Agent: " + Id + " -> bid was accepted and confirmed, resulting in success.");
-		}
+		try {
+			// simulacija nekakvog rada
+			Thread.sleep(2500);
 
-		MessageBuilder.sendACL(reply);
+			if (Math.random() > 0.4) {
+				reply.setPerformative(Performative.failure);
+				System.out.println(Id + ": work failed, sending information to initiator.");
+				reply.setContent("Work failed.");
+			} else {
+				reply.setPerformative(Performative.inform);
+				System.out.println(Id + ": work succeeded, sending information to initiator.");
+				reply.setContent("Work succeeded.");
+			}
+			MessageBuilder.sendACL(reply);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

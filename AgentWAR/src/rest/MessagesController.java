@@ -22,6 +22,8 @@ public class MessagesController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void sendMessage(ACLMessage msg) {
 		// posalji acl poruku
+		//System.out.println(msg.getReceivers());
+		//System.out.println(msg.getContent());
 		try {
 			Context context = new InitialContext();
 			RestMessageLocal rml = (RestMessageLocal) context.lookup(RestMessageLocal.LOOKUP);
@@ -44,5 +46,5 @@ public class MessagesController {
 			return null;
 		}
 	}
-	
+
 }
