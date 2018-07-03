@@ -82,12 +82,12 @@ public class ChessBishopAgent extends AgentClass {
 			dx = 1;
 			dy = 1;
 			while ((x + dx) < 8 && (y + dy) < 8) {
-				if (niz[(x + dx) * 8 + (y - dy)].equals("0")) {
-					result[(x + dx) * 8 + (y - dy)] = 1;
-				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == enemy) {
-					result[(x + dx) * 8 + (y - dy)] = 1;
+				if (niz[(x + dx) * 8 + (y + dy)].equals("0")) {
+					result[(x + dx) * 8 + (y + dy)] = 1;
+				} else if (niz[(x + dx) * 8 + (y + dy)].charAt(0) == enemy) {
+					result[(x + dx) * 8 + (y + dy)] = 1;
 					break;
-				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == friend) {
+				} else if (niz[(x + dx) * 8 + (y + dy)].charAt(0) == friend) {
 					break;
 				}
 				dx++;

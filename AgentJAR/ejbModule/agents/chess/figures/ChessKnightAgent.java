@@ -21,7 +21,7 @@ public class ChessKnightAgent extends AgentClass {
 			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
 				enemy = 'c';
 			}
-			
+
 			int x = poz / 8;
 			int y = (poz % 8);
 
@@ -126,7 +126,7 @@ public class ChessKnightAgent extends AgentClass {
 					result[59] = 1;
 				}
 
-			} else if (x == 6 && y == 54) {
+			} else if (x == 6 && y == 6) {
 
 				// niz[54]
 				if (niz[60].equals("0") || niz[60].charAt(0) == enemy) {
@@ -143,6 +143,126 @@ public class ChessKnightAgent extends AgentClass {
 
 				if (niz[39].equals("0") || niz[39].charAt(0) == enemy) {
 					result[39] = 1;
+				}
+
+			} else if (x == 0 && y == 1) {
+
+				// niz[1]
+				if (niz[11].equals("0") || niz[11].charAt(0) == enemy) {
+					result[11] = 1;
+				}
+
+				if (niz[18].equals("0") || niz[18].charAt(0) == enemy) {
+					result[18] = 1;
+				}
+
+				if (niz[16].equals("0") || niz[16].charAt(0) == enemy) {
+					result[16] = 1;
+				}
+
+			} else if (x == 0 && y == 6) {
+
+				// niz[6]
+				if (niz[23].equals("0") || niz[23].charAt(0) == enemy) {
+					result[23] = 1;
+				}
+
+				if (niz[21].equals("0") || niz[21].charAt(0) == enemy) {
+					result[21] = 1;
+				}
+
+				if (niz[12].equals("0") || niz[12].charAt(0) == enemy) {
+					result[12] = 1;
+				}
+
+			} else if (x == 7 && y == 1) {
+
+				// niz[57]
+				if (niz[51].equals("0") || niz[51].charAt(0) == enemy) {
+					result[51] = 1;
+				}
+
+				if (niz[42].equals("0") || niz[42].charAt(0) == enemy) {
+					result[42] = 1;
+				}
+
+				if (niz[40].equals("0") || niz[40].charAt(0) == enemy) {
+					result[40] = 1;
+				}
+
+			} else if (x == 7 && y == 6) {
+
+				// niz[62]
+				if (niz[52].equals("0") || niz[52].charAt(0) == enemy) {
+					result[52] = 1;
+				}
+
+				if (niz[45].equals("0") || niz[45].charAt(0) == enemy) {
+					result[45] = 1;
+				}
+
+				if (niz[47].equals("0") || niz[47].charAt(0) == enemy) {
+					result[47] = 1;
+				}
+
+			} else if (x == 1 && y == 0) {
+
+				// niz[8]
+				if (niz[2].equals("0") || niz[2].charAt(0) == enemy) {
+					result[2] = 1;
+				}
+
+				if (niz[18].equals("0") || niz[18].charAt(0) == enemy) {
+					result[18] = 1;
+				}
+
+				if (niz[25].equals("0") || niz[25].charAt(0) == enemy) {
+					result[25] = 1;
+				}
+
+			} else if (x == 1 && y == 7) {
+
+				// niz[15]
+				if (niz[5].equals("0") || niz[5].charAt(0) == enemy) {
+					result[5] = 1;
+				}
+
+				if (niz[21].equals("0") || niz[21].charAt(0) == enemy) {
+					result[21] = 1;
+				}
+
+				if (niz[30].equals("0") || niz[30].charAt(0) == enemy) {
+					result[30] = 1;
+				}
+
+			} else if (x == 6 && y == 0) {
+
+				// niz[48]
+				if (niz[33].equals("0") || niz[33].charAt(0) == enemy) {
+					result[33] = 1;
+				}
+
+				if (niz[42].equals("0") || niz[42].charAt(0) == enemy) {
+					result[42] = 1;
+				}
+
+				if (niz[58].equals("0") || niz[58].charAt(0) == enemy) {
+					result[58] = 1;
+				}
+
+			} else if (x == 6 && y == 7) {
+
+				// niz[55]
+				if (niz[38].equals("0") || niz[38].charAt(0) == enemy) {
+					result[38] = 1;
+				}
+
+				if (niz[45].equals("0") || niz[45].charAt(0) == enemy) {
+					result[45] = 1;
+				}
+
+				if (niz[61].equals("0") || niz[61].charAt(0) == enemy) {
+					result[61] = 1;
 				}
 
 			} else if (x == 0) {

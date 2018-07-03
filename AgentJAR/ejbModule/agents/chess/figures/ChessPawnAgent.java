@@ -17,6 +17,8 @@ public class ChessPawnAgent extends AgentClass {
 			String niz[] = (String[]) userArgs.get("table");
 			int poz = (int) userArgs.get("position");
 
+//			System.out.println("Position --> " + poz);
+			
 			int direction = 1;
 			char enemy = 'p';
 			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
@@ -35,6 +37,7 @@ public class ChessPawnAgent extends AgentClass {
 			if (direction == 1) {
 				// proverava da li je figura u zadnjem redu
 				if (x < 7) {
+					// napred
 					if (niz[(x + direction) * 8 + y].equals("0")) {
 						result[(x + direction) * 8 + y] = 1;
 					}
@@ -42,7 +45,7 @@ public class ChessPawnAgent extends AgentClass {
 					// figura se ne nalazi u krajnjem levom redu
 					if (y > 0) {
 						String pos = niz[(x + direction) * 8 + (y - 1)];
-						if (pos.charAt(0) == 'p') {
+						if (pos.charAt(0) == enemy) {
 							result[(x + direction) * 8 + (y - 1)] = 1;
 						}
 					}
@@ -80,6 +83,11 @@ public class ChessPawnAgent extends AgentClass {
 				}
 			}
 
+//			for (int i = 0; i < niz.length; i++) {
+//				System.out.println(i + "	" + result[i]);
+//			}
+			
+			
 			ACLMessage reply = new ACLMessage();
 			HashMap<String, Object> replyArgs = new HashMap<>();
 			replyArgs.put("result", result);
