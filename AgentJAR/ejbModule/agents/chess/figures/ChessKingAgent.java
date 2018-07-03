@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import model.acl.ACLMessage;
 import model.acl.Performative;
+import model.agent.AID;
 import model.agent.AgentClass;
+import utils.MessageBuilder;
 
 public class ChessKingAgent extends AgentClass {
 
@@ -165,6 +167,15 @@ public class ChessKingAgent extends AgentClass {
 					}
 				}
 			}
+			
+			ACLMessage reply = new ACLMessage();
+			HashMap<String, Object> replyArgs = new HashMap<>();
+			replyArgs.put("result", result);
+			reply.setPerformative(Performative.inform_ref);
+			reply.setUserArgs(replyArgs);
+			reply.setSender(Id);
+			reply.setReceivers(new AID[] { poruka.getSender() });
+			MessageBuilder.sendACL(reply);
 		} else {
 			System.out.println("Error: Unexpected message.");
 		}
