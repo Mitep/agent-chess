@@ -10,11 +10,17 @@ td, img {
 .white-field {
     background-color: #fff0b3;
 }
-
+.clicked-field{
+    background-color: blueviolet;
+}
 #console {
-    margin: 30px;
+    margin: 50px;
     height: 500px;
-    width: 360px;
+    width: 50%;
+    border: 1px;
+    border-style: groove;
+    overflow: scroll;
+    display: inline-block;
 }
 
 #chess{
@@ -31,11 +37,13 @@ p {
 
 button {
     height: 60px;
-    width: 50%;
+    width: 30%;
     margin:0 auto;
+    margin-top: 30px;
     display:block;
 }
 
 div {
     display: inline-block;
 }
+
