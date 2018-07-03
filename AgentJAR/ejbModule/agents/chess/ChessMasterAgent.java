@@ -13,15 +13,21 @@ import model.agent.AID;
 import model.agent.AgentClass;
 import model.agent.AgentType;
 import model.center.AgentCenter;
+import model.chess.FigureCalculation;
 import node_manager.NodeManagerLocal;
 import utils.MessageBuilder;
 
 public class ChessMasterAgent extends AgentClass {
 
+	private AID player;
+	
 	// broj polja , tip figure
 	private HashMap<Integer, String> chessTable = new HashMap<Integer, String>();
 	
-	private ArrayList<AID> figureAIDs = new ArrayList<AID>();
+	// aid, trenutna pozicija
+	private HashMap<AID, Integer> figureAIDs = new HashMap<AID, Integer>();
+	
+	private ArrayList<FigureCalculation> calcMoves = new ArrayList<FigureCalculation>();
 	
 	@Override
 	public void handleMessage(ACLMessage msg) {
@@ -31,10 +37,15 @@ public class ChessMasterAgent extends AgentClass {
 		} else if(msg.getPerformative().equals(Performative.inform)) {
 			// player nam salje koji potez je odigrao
 			// sada smo mi na redu
-			moveFigure();
+			calculateMovement(msg);
+		} else if(msg.getPerformative().equals(Performative.inform_ref)) {
+			// od figura nam stizu proracuni
+			getCalculations(msg);
+		} else if(msg.getPerformative().equals(Performative.failure)) {
+			// player nam salje da je izgubio
 		}
 	}
-	
+
 	private void initChessGame(ACLMessage playerMsg) {
 		try {
 			Context context = new InitialContext();
@@ -45,6 +56,7 @@ public class ChessMasterAgent extends AgentClass {
 			AgentType figureType = aml.getAgentType("ChessFigureAgent", "chess.ChessFigureAgent");
 		
 			AID figureAgent;
+			this.player = playerMsg.getSender();
 			
 			// poruka koja se salje je skoro uvek ista
 			// menja se samo tip agenta kome saljemo i nejgova pozicija
@@ -52,15 +64,15 @@ public class ChessMasterAgent extends AgentClass {
 			aclm.setSender(Id);
 			aclm.setPerformative(Performative.request);
 			
-			// ========================== PAWN =================================
+			// ========================== PAWNS =================================
 			for(int i = 8; i < 16; i ++) {
 				figureAgent = new AID("Pawn" + (i-7), host, figureType);
 				aml.startAgent(figureAgent);
-				figureAIDs.add(figureAgent);
+				figureAIDs.put(figureAgent, i);
 				
 				aclm.setReceivers(new AID[] { figureAgent });
 				aclm.setContent(String.valueOf(i));
-				aclm.setOntology("Rook");
+				aclm.setOntology("P");
 				MessageBuilder.sendACL(aclm);
 				
 				chessTable.put(i, "cP");
@@ -68,11 +80,11 @@ public class ChessMasterAgent extends AgentClass {
 			// =========================== TOP 1 ==============================
 			figureAgent = new AID("Rook1", host, figureType);
 			aml.startAgent(figureAgent);
-			figureAIDs.add(figureAgent);
+			figureAIDs.put(figureAgent, 0);
 			
 			aclm.setReceivers(new AID[] { figureAgent });
 			aclm.setContent("0");
-			aclm.setOntology("Rook");
+			aclm.setOntology("R");
 			MessageBuilder.sendACL(aclm);
 			
 			chessTable.put(0, "cR");
@@ -80,15 +92,86 @@ public class ChessMasterAgent extends AgentClass {
 			// =========================== TOP 2 ==============================
 			figureAgent = new AID("Rook2", host, figureType);
 			aml.startAgent(figureAgent);
-			figureAIDs.add(figureAgent);
+			figureAIDs.put(figureAgent, 7);
 			
 			aclm.setReceivers(new AID[] { figureAgent });
 			aclm.setContent("7");
-			aclm.setOntology("Rook");
+			aclm.setOntology("R");
 			MessageBuilder.sendACL(aclm);
 			
 			chessTable.put(7, "cR");
 			
+			// =========================== KONJ 1 ==============================
+			figureAgent = new AID("Knight1", host, figureType);
+			aml.startAgent(figureAgent);
+			figureAIDs.put(figureAgent, 1);
+			
+			aclm.setReceivers(new AID[] { figureAgent });
+			aclm.setContent("1");
+			aclm.setOntology("N");
+			MessageBuilder.sendACL(aclm);
+			
+			chessTable.put(1, "cN");
+			
+			// =========================== KONJ 2 ==============================
+			figureAgent = new AID("Knight2", host, figureType);
+			aml.startAgent(figureAgent);
+			figureAIDs.put(figureAgent, 6);
+			
+			aclm.setReceivers(new AID[] { figureAgent });
+			aclm.setContent("6");
+			aclm.setOntology("N");
+			MessageBuilder.sendACL(aclm);
+			
+			chessTable.put(6, "cN");
+			
+			// =========================== LOVAC 1 ==============================
+			figureAgent = new AID("Bishop1", host, figureType);
+			aml.startAgent(figureAgent);
+			figureAIDs.put(figureAgent, 2);
+			
+			aclm.setReceivers(new AID[] { figureAgent });
+			aclm.setContent("2");
+			aclm.setOntology("B");
+			MessageBuilder.sendACL(aclm);
+			
+			chessTable.put(2, "cB");
+						
+			// =========================== LOVAC 2 ==============================
+			figureAgent = new AID("Bishop2", host, figureType);
+			aml.startAgent(figureAgent);
+			figureAIDs.put(figureAgent, 5);
+			
+			aclm.setReceivers(new AID[] { figureAgent });
+			aclm.setContent("5");
+			aclm.setOntology("B");
+			MessageBuilder.sendACL(aclm);
+			
+			chessTable.put(5, "cB");
+			
+			// =========================== KRALJICA ==============================
+			figureAgent = new AID("Queen", host, figureType);
+			aml.startAgent(figureAgent);
+			figureAIDs.put(figureAgent, 3);
+			
+			aclm.setReceivers(new AID[] { figureAgent });
+			aclm.setContent("3");
+			aclm.setOntology("Q");
+			MessageBuilder.sendACL(aclm);
+			
+			chessTable.put(3, "cQ");
+			
+			// =========================== KRALJ ==============================
+			figureAgent = new AID("King", host, figureType);
+			aml.startAgent(figureAgent);
+			figureAIDs.put(figureAgent, 4);
+			
+			aclm.setReceivers(new AID[] { figureAgent });
+			aclm.setContent("4");
+			aclm.setOntology("K");
+			MessageBuilder.sendACL(aclm);
+			
+			chessTable.put(4, "cK");			
 			
 			// ==================== Inicijalizacija korisnikovih figurica ==================
 			chessTable.put(56, "pR");
@@ -116,18 +199,94 @@ public class ChessMasterAgent extends AgentClass {
 		}
 	}
 	
-	private void moveFigure() {
+	private void calculateMovement(ACLMessage playerMsg) {
+		// proverimo da nam neka figurica nije pojedena
+		// ako jeste uklonimo je iz liste  figureAIDs
+		String[] movement = playerMsg.getContent().split("-");
+		String newPlayerPos = chessTable.get(movement[1]);
+		int curMov = Integer.parseInt(movement[0]);
+		int newMov = Integer.parseInt(movement[1]);
 		
-		// ovde treba neka struktura 
+		if(newPlayerPos.charAt(0) == 'p') {
+			// pojedena nam je figura
+			// izbacujemo je iz liste
+			for(AID a : figureAIDs.keySet()) {
+				if(figureAIDs.get(a) == newMov) {
+					figureAIDs.remove(a);
+				}
+			}
+		}
 		
-		for(AID fig : figureAIDs) {
-			
-			// sracunamo za svaku figuru koja joj je najbolja opcija
-			// opciju smestimo u strukturu
-			
-		} 
+		// pomerimo figuru
+		String figure = chessTable.get(curMov);
+		chessTable.replace(curMov, "0");
+		chessTable.replace(newMov, figure);
 		
-		// izaberemo najbolju opciju iz strukture i nju saljemo playeru
+		// saljemo svima sta je korisnik odigrao
+		// trazimo da nam sracunaju najbolji potez
+		for(AID aid : figureAIDs.keySet()) {
+			ACLMessage acl = new ACLMessage();
+			acl.setReceivers(new AID[] { aid });
+			acl.setSender(Id);
+			acl.setPerformative(Performative.propose);
+			acl.setContent(playerMsg.getContent());
+			MessageBuilder.sendACL(acl);
+		}
 	}
+	
+	private void getCalculations(ACLMessage agentMsg) {
+		// dodamo kalkulaciju u listu calcMoves
+		FigureCalculation fc = new FigureCalculation();
+		fc.setFigure(agentMsg.getSender());
+		
+		int cur_pos = (int) agentMsg.getUserArgs().get("current_position");
+		fc.setCurrent_position(cur_pos);
+		
+		int new_pos = (int) agentMsg.getUserArgs().get("new_position");
+		fc.setNew_position(new_pos);
+		
+		double eff = (double) agentMsg.getUserArgs().get("efficiency");
+		fc.setEfficiency(eff);
+		
+		calcMoves.add(fc);
+		
+		// ako nam je poslednji inform stigao onda krecemo onda trazimo najbolji proracun
+		if(calcMoves.size() == figureAIDs.size()) {
+			moveFigure();
+		}
+	}
+	
+	private void moveFigure() {
+		// pronadjemo najbolji potez
+		FigureCalculation best = calcMoves.get(0);
+		for(int i=1; i < calcMoves.size(); i++) {
+			if(calcMoves.get(i).getEfficiency() >= best.getEfficiency())
+				best = calcMoves.get(i);
+		}
+		
+		// pomerimo figuru
+		String figure = chessTable.get(best.getCurrent_position());
+		chessTable.replace(best.getCurrent_position(), "0");
+		chessTable.replace(best.getNew_position(), figure);
+		
+		// posaljemo poruku playeru i nasim agentima sta smo odigrali
+		ACLMessage msg = new ACLMessage();
+		msg.setSender(Id);
+		msg.setPerformative(Performative.inform);
+		msg.setContent(best.getCurrent_position() + "-" + best.getNew_position());
+		
+		AID[] moveRecs = new AID[ figureAIDs.size() + 1 ];
+		int i = 0;
+		for(AID a : figureAIDs.keySet()) {
+			moveRecs[i] = a;
+			i++;
+		}
+		moveRecs[i] = this.player;
 
+		msg.setReceivers( moveRecs );
+		
+		// ocistimo calcMoves
+		calcMoves.clear();
+	}
+	
 }

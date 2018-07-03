@@ -14,30 +14,9 @@ public class ChessPlayerAgent extends AgentClass {
 		} else if(msg.getPerformative().equals(Performative.request)) {
 			// zapocni igru 
 			System.out.println(msg.getContent());
+		} else if(msg.getPerformative().equals(Performative.failure)) {
+			// computer nam salje da je izgubio
 		}
 	}
 	
-//	private void startGame() {
-//		try {
-//			Context context = new InitialContext();
-//			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
-//			NodeManagerLocal nml = (NodeManagerLocal) context.lookup(NodeManagerLocal.LOOKUP);
-//			
-//			// kreiranje master agenta
-//			AID masterAgent = new AID("master",
-//					new AgentCenter(nml.getThisNode().getAddress(), nml.getThisNode().getAlias()),
-//					aml.getAgentType("ChessMasterAgent", "chess.ChessMasterAgent"));
-//			aml.startAgent(masterAgent);
-//			
-//			// slanje poruke master agentu da inicijalizuje partiju
-//			ACLMessage toMaster = new ACLMessage();
-//			toMaster.setReceivers(new AID[] { masterAgent });
-//			toMaster.setSender(Id);
-//			toMaster.setPerformative(Performative.request);
-//			MessageBuilder.sendACL(toMaster);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 }
