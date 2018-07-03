@@ -18,8 +18,10 @@ public class ChessPawnAgent extends AgentClass {
 			int poz = (int) userArgs.get("position");
 
 			int direction = 1;
+			char enemy = 'p';
 			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
 				direction = -1;
+				enemy = 'c';
 			}
 
 			int x = poz / 8;
@@ -48,7 +50,7 @@ public class ChessPawnAgent extends AgentClass {
 					// figura se ne nalazi u samom desnom redu
 					if (y < 7) {
 						String pos = niz[(x + direction) * 8 + (y + 1)];
-						if (pos.charAt(0) == 'p') {
+						if (pos.charAt(0) == enemy) {
 							result[(x + direction) * 8 + (y + 1)] = 1;
 						}
 					}
@@ -63,7 +65,7 @@ public class ChessPawnAgent extends AgentClass {
 					// figura se ne nalazi u krajnjem levom redu
 					if (y > 0) {
 						String pos = niz[(x + direction) * 8 + (y - 1)];
-						if (pos.charAt(0) == 'p') {
+						if (pos.charAt(0) == enemy) {
 							result[(x + direction) * 8 + (y - 1)] = 1;
 						}
 					}
@@ -71,7 +73,7 @@ public class ChessPawnAgent extends AgentClass {
 					// figura se ne nalazi u samom desnom redu
 					if (y < 7) {
 						String pos = niz[(x + direction) * 8 + (y + 1)];
-						if (pos.charAt(0) == 'p') {
+						if (pos.charAt(0) == enemy) {
 							result[(x + direction) * 8 + (y + 1)] = 1;
 						}
 					}

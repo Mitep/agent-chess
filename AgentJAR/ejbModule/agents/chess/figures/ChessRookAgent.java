@@ -32,6 +32,11 @@ public class ChessRookAgent extends AgentClass {
 
 			int result[] = new int[64];
 			result[poz] = -1;
+			
+			char enemy = 'p';
+			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
+				enemy = 'c';
+			}
 
 			int xdmax = 7 - x; // koliko se moze kretati dole po x osi do kraja table
 			int ylmax = y; // koliko se moze kretati ulevo po y osi pre nego sto dodje do kraja table, itd.
@@ -41,7 +46,7 @@ public class ChessRookAgent extends AgentClass {
 			for (int i = 1; i <= xdmax; i++) {
 				if (niz[(x + i) * 8 + y].equals("0")) {
 					result[(x + i) * 8 + y] = 1;
-				} else if (niz[(x + i) * 8 + y].charAt(0) == 'p') {
+				} else if (niz[(x + i) * 8 + y].charAt(0) == enemy) {
 					result[(x + i) * 8 + y] = 1;
 					break;
 				}
@@ -50,7 +55,7 @@ public class ChessRookAgent extends AgentClass {
 			for (int i = 1; i <= xumax; i++) {
 				if (niz[(x - i) * 8 + y].equals("0")) {
 					result[(x - i) * 8 + y] = 1;
-				} else if (niz[(x - i) * 8 + y].charAt(0) == 'p') {
+				} else if (niz[(x - i) * 8 + y].charAt(0) == enemy) {
 					result[(x - i) * 8 + y] = 1;
 					break;
 				}
@@ -59,7 +64,7 @@ public class ChessRookAgent extends AgentClass {
 			for (int i = 1; i <= ydmax; i++) {
 				if (niz[x * 8 + (y + i)].equals("0")) {
 					result[x * 8 + (y + i)] = 1;
-				} else if (niz[x * 8 + (y + i)].charAt(0) == 'p') {
+				} else if (niz[x * 8 + (y + i)].charAt(0) == enemy) {
 					result[x * 8 + (y + i)] = 1;
 					break;
 				}
@@ -68,7 +73,7 @@ public class ChessRookAgent extends AgentClass {
 			for (int i = 1; i <= ylmax; i++) {
 				if (niz[x * 8 + (y - i)].equals("0")) {
 					result[x * 8 + (y - i)] = 1;
-				} else if (niz[x * 8 + (y - i)].charAt(0) == 'p') {
+				} else if (niz[x * 8 + (y - i)].charAt(0) == enemy) {
 					result[x * 8 + (y - i)] = 1;
 					break;
 				}

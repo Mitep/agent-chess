@@ -15,6 +15,11 @@ public class ChessKingAgent extends AgentClass {
 			String niz[] = (String[]) userArgs.get("table");
 			int poz = (int) userArgs.get("position");
 
+			char enemy = 'p';
+			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
+				enemy = 'c';
+			}
+			
 			int x = poz / 8;
 			int y = (poz % 8);
 
@@ -24,60 +29,60 @@ public class ChessKingAgent extends AgentClass {
 			if (x == 0 && y == 0) {
 
 				// kralj se nalazi u gornjem levom cosku
-				if (niz[1].equals("0") || niz[1].charAt(0) == 'p') {
+				if (niz[1].equals("0") || niz[1].charAt(0) == enemy) {
 					result[1] = 1;
 				}
 
-				if (niz[8].equals("0") || niz[8].charAt(0) == 'p') {
+				if (niz[8].equals("0") || niz[8].charAt(0) == enemy) {
 					result[8] = 1;
 				}
 
-				if (niz[9].equals("0") || niz[9].charAt(0) == 'p') {
+				if (niz[9].equals("0") || niz[9].charAt(0) == enemy) {
 					result[9] = 1;
 				}
 
 			} else if (x == 7 && y == 7) {
 
 				// kralj se nalazi u donjem desnom cosku
-				if (niz[54].equals("0") || niz[54].charAt(0) == 'p') {
+				if (niz[54].equals("0") || niz[54].charAt(0) == enemy) {
 					result[54] = 1;
 				}
 
-				if (niz[55].equals("0") || niz[55].charAt(0) == 'p') {
+				if (niz[55].equals("0") || niz[55].charAt(0) == enemy) {
 					result[55] = 1;
 				}
 
-				if (niz[62].equals("0") || niz[62].charAt(0) == 'p') {
+				if (niz[62].equals("0") || niz[62].charAt(0) == enemy) {
 					result[62] = 1;
 				}
 
 			} else if (x == 7 && y == 0) {
 
 				// kralj se nalazi u donjem levom cosku
-				if (niz[48].equals("0") || niz[48].charAt(0) == 'p') {
+				if (niz[48].equals("0") || niz[48].charAt(0) == enemy) {
 					result[48] = 1;
 				}
 
-				if (niz[49].equals("0") || niz[49].charAt(0) == 'p') {
+				if (niz[49].equals("0") || niz[49].charAt(0) == enemy) {
 					result[49] = 1;
 				}
 
-				if (niz[57].equals("0") || niz[57].charAt(0) == 'p') {
+				if (niz[57].equals("0") || niz[57].charAt(0) == enemy) {
 					result[57] = 1;
 				}
 
 			} else if (x == 0 && y == 7) {
 
 				// kralj se nalazi u gornjem desnom cosku
-				if (niz[6].equals("0") || niz[6].charAt(0) == 'p') {
+				if (niz[6].equals("0") || niz[6].charAt(0) == enemy) {
 					result[6] = 1;
 				}
 
-				if (niz[14].equals("0") || niz[14].charAt(0) == 'p') {
+				if (niz[14].equals("0") || niz[14].charAt(0) == enemy) {
 					result[14] = 1;
 				}
 
-				if (niz[15].equals("0") || niz[15].charAt(0) == 'p') {
+				if (niz[15].equals("0") || niz[15].charAt(0) == enemy) {
 					result[15] = 1;
 				}
 
@@ -89,7 +94,7 @@ public class ChessKingAgent extends AgentClass {
 						if (dx != dy) {
 							if (niz[(x + dx) * 8 + y + dy].equals("0")) {
 								result[(x + dx) * 8 + y + dy] = 1;
-							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == 'p') {
+							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == enemy) {
 								result[(x + dx) * 8 + y + dy] = 1;
 								break;
 							}

@@ -22,6 +22,11 @@ public class ChessBishopAgent extends AgentClass {
 
 			int result[] = new int[64];
 			result[poz] = -1;
+			
+			char enemy = 'p';
+			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
+				enemy = 'c';
+			}
 
 			// dijagonala - gore levo
 			int dx = 1;
@@ -29,7 +34,7 @@ public class ChessBishopAgent extends AgentClass {
 			while ((x - dx) >= 0 && (y - dy) >= 0) {
 				if (niz[(x - dx) * 8 + (y - dy)].equals("0")) {
 					result[(x - dx) * 8 + (y - dy)] = 1;
-				} else if (niz[(x - dx) * 8 + (y - dy)].charAt(0) == 'p') {
+				} else if (niz[(x - dx) * 8 + (y - dy)].charAt(0) == enemy) {
 					result[(x - dx) * 8 + (y - dy)] = 1;
 					break;
 				}
@@ -43,7 +48,7 @@ public class ChessBishopAgent extends AgentClass {
 			while ((x - dx) >= 0 && (y + dy) < 8) {
 				if (niz[(x - dx) * 8 + (y + dy)].equals("0")) {
 					result[(x - dx) * 8 + (y + dy)] = 1;
-				} else if (niz[(x - dx) * 8 + (y + dy)].charAt(0) == 'p') {
+				} else if (niz[(x - dx) * 8 + (y + dy)].charAt(0) == enemy) {
 					result[(x - dx) * 8 + (y + dy)] = 1;
 					break;
 				}
@@ -57,7 +62,7 @@ public class ChessBishopAgent extends AgentClass {
 			while ((x + dx) < 8 && (y - dy) >= 0) {
 				if (niz[(x + dx) * 8 + (y - dy)].equals("0")) {
 					result[(x + dx) * 8 + (y - dy)] = 1;
-				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == 'p') {
+				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == enemy) {
 					result[(x + dx) * 8 + (y - dy)] = 1;
 					break;
 				}
@@ -71,7 +76,7 @@ public class ChessBishopAgent extends AgentClass {
 			while ((x + dx) < 8 && (y + dy) < 8) {
 				if (niz[(x + dx) * 8 + (y - dy)].equals("0")) {
 					result[(x + dx) * 8 + (y - dy)] = 1;
-				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == 'p') {
+				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == enemy) {
 					result[(x + dx) * 8 + (y - dy)] = 1;
 					break;
 				}
