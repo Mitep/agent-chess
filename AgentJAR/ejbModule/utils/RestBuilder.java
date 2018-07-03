@@ -62,4 +62,12 @@ public class RestBuilder {
         rest.addRunningAgents(runningAgents);
 	}
 	
+	public static boolean getHeartBeat(AgentCenter ac) {
+		ResteasyClient client = new ResteasyClientBuilder().build();
+        ResteasyWebTarget target = client.target(ac.getAddress() + "/AgentWAR");
+        RestAPI rest = target.proxy(RestAPI.class);
+        
+		return rest.heartBeat();
+	}
+	
 }

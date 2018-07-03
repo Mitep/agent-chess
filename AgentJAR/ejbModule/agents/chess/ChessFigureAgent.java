@@ -158,6 +158,17 @@ public class ChessFigureAgent extends AgentClass {
 			// gledamo za protivnicke figure
 			// moramo implementirati
 			returnedResults++;
+			
+			ArrayList<Double> newUtilResult = new ArrayList<Double>();
+
+			for(int i=0; i < 64; i++) {
+				if(result[i] == 1) {
+					newUtilResult.add(utilResult.get(i) - 0.5);
+				} else {
+					newUtilResult.add(utilResult.get(i));
+				}
+			}
+			utilResult = newUtilResult;
 		}
 		
 		// ako su nam svi rezultati vraceni onda saljemo rezultat nasem master agentu

@@ -16,6 +16,7 @@ import javax.naming.NamingException;
 import agent_manager.AgentManagerLocal;
 import model.agent.AgentType;
 import model.center.AgentCenter;
+import services.interfaces.HeartBeatLocal;
 import utils.RestBuilder;
 
 @Singleton
@@ -37,12 +38,16 @@ public class NodeManager implements NodeManagerLocal {
 			Context context = new InitialContext();
 			AgentManagerLocal aml = (AgentManagerLocal) context.lookup(AgentManagerLocal.LOOKUP);
 			aml.startInit(getThisNode());
+			
+			HeartBeatLocal hbl = (HeartBeatLocal) context.lookup(HeartBeatLocal.LOOKUP);
+			hbl.startProtocol(getSlaves());
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
 		if (!masterNode.getAddress().equals(thisNode.getAddress())) {
 			RestBuilder.contactMaster(masterNode, thisNode);
 		}
+		
 	}
 
 	private void setAgentCentre() {

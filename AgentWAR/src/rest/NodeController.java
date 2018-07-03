@@ -43,8 +43,8 @@ public class NodeController {
 	
 	// heartbeat protokol
 	@GET
-	public String heartBeat() {
-		return "alive";
+	public boolean heartBeat() {
+		return true;
 	}
 	
 }

@@ -70,6 +70,6 @@ public interface RestAPI {
 	@GET
 	@Path("/node")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String heartBeat();
+	public boolean heartBeat();
 	
 }
