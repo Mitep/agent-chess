@@ -82,6 +82,11 @@ public class ChessFigureAgent extends AgentClass {
 			for(int i= 48; i < 56 ; i++) {
 				chessTable.put(i, "pP");
 			}
+			
+		// ============================= PRAZNA POLJA ====================
+		for(int i = 16; i < 48; i++) {
+			chessTable.put(i, "0");
+		}
 	}
 
 	private void calculateMovement(ACLMessage masterMsg) {
@@ -98,6 +103,7 @@ public class ChessFigureAgent extends AgentClass {
 		AgentCenter host = masterMsg.getSender().getHost();
 		AID agentUtil;
 		ACLMessage messageUtil = new ACLMessage();
+		messageUtil.setPerformative(Performative.request);
 		// racunamo
 		// prvo odredimo gde mi mozemo da idemo
 		agentUtil = getChessUtilAgent(figureType.charAt(0), host);
@@ -111,6 +117,8 @@ public class ChessFigureAgent extends AgentClass {
 			tableArr[i] = chessTable.get(i);
 		}
 		userArgs.put("table", tableArr);
+		
+		messageUtil.setUserArgs(userArgs);
 		MessageBuilder.sendACL(messageUtil);
 		
 		// za svaku protivnicku figuru odredimo da li moze da nas pojede ili ne
@@ -128,7 +136,7 @@ public class ChessFigureAgent extends AgentClass {
 	}
 	
 	private void getUtilResult(ACLMessage utilMsg) {
-		HashMap<String, Object> userArgs = new HashMap<String, Object>();
+		HashMap<String, Object> userArgs = utilMsg.getUserArgs();
 		int[] result = (int[]) userArgs.get("result");
 		
 		if(result[currentPosition] == -1) {
@@ -158,17 +166,17 @@ public class ChessFigureAgent extends AgentClass {
 			// gledamo za protivnicke figure
 			// moramo implementirati
 			returnedResults++;
-			
-			ArrayList<Double> newUtilResult = new ArrayList<Double>();
-
-			for(int i=0; i < 64; i++) {
-				if(result[i] == 1) {
-					newUtilResult.add(utilResult.get(i) - 0.5);
-				} else {
-					newUtilResult.add(utilResult.get(i));
-				}
-			}
-			utilResult = newUtilResult;
+//			
+//			ArrayList<Double> newUtilResult = new ArrayList<Double>();
+//
+//			for(int i=0; i < 64; i++) {
+//				if(result[i] == 1) {
+//					newUtilResult.add(utilResult.get(i) - 0.5);
+//				} else {
+//					newUtilResult.add(utilResult.get(i));
+//				}
+//			}
+//			utilResult = newUtilResult;
 		}
 		
 		// ako su nam svi rezultati vraceni onda saljemo rezultat nasem master agentu
@@ -194,6 +202,8 @@ public class ChessFigureAgent extends AgentClass {
 		userArgs.put("current_position", currentPosition);
 		userArgs.put("new_position", newPos);
 		userArgs.put("efficiency", eff);
+		retMsg.setUserArgs(userArgs);
+		retMsg.setPerformative(Performative.inform_ref);
 		MessageBuilder.sendACL(retMsg);
 		
 		returnedResults = 0;
@@ -221,17 +231,17 @@ public class ChessFigureAgent extends AgentClass {
 			
 			AgentType figureType = null;
 			switch(aType) {
-				case 'P': figureType = aml.getAgentType("ChessPawnAgent", "chess.figures.ChessPawnAgent");
+				case 'P': figureType = aml.getAgentType("ChessPawnAgent", "agents.chess.figures");
 						break;
-				case 'N': figureType = aml.getAgentType("ChessKnightAgent", "chess.figures.ChessKnightAgent");
+				case 'N': figureType = aml.getAgentType("ChessKnightAgent", "agents.chess.figures");
 						break;
-				case 'B': figureType = aml.getAgentType("ChessBishopAgent", "chess.figures.ChessBishopAgent");
+				case 'B': figureType = aml.getAgentType("ChessBishopAgent", "agents.chess.figures");
 						break;
-				case 'R': figureType = aml.getAgentType("ChessRookAgent", "chess.figures.ChessRookAgent");
+				case 'R': figureType = aml.getAgentType("ChessRookAgent", "agents.chess.figures");
 						break;
-				case 'Q': figureType = aml.getAgentType("ChessQueenAgent", "chess.figures.ChessQueenAgent");
+				case 'Q': figureType = aml.getAgentType("ChessQueenAgent", "agents.chess.figures");
 						break;
-				case 'K': figureType = aml.getAgentType("ChessKingAgent", "chess.figures.ChessKingAgent");
+				case 'K': figureType = aml.getAgentType("ChessKingAgent", "agents.chess.figures");
 						break;
 			}
 			

@@ -53,7 +53,7 @@ public class ChessMasterAgent extends AgentClass {
 			NodeManagerLocal nml = (NodeManagerLocal) context.lookup(NodeManagerLocal.LOOKUP);
 			
 			AgentCenter host = nml.getThisNode();
-			AgentType figureType = aml.getAgentType("ChessFigureAgent", "chess.ChessFigureAgent");
+			AgentType figureType = aml.getAgentType("ChessFigureAgent", "agents.chess");
 		
 			AID figureAgent;
 			this.player = playerMsg.getSender();
@@ -186,6 +186,10 @@ public class ChessMasterAgent extends AgentClass {
 				chessTable.put(i, "pP");
 			}
 			
+			// ============================= PRAZNA POLJA ====================
+			for(int i = 16; i < 48; i++) {
+				chessTable.put(i, "0");
+			}
 			// =========================== KRAJ ===============================
 			// saljemo poruku playeru da moze da zapocne igru tako sto salje prvi potez
 			ACLMessage aclmp = new ACLMessage();
@@ -202,10 +206,11 @@ public class ChessMasterAgent extends AgentClass {
 	private void calculateMovement(ACLMessage playerMsg) {
 		// proverimo da nam neka figurica nije pojedena
 		// ako jeste uklonimo je iz liste  figureAIDs
-		String[] movement = playerMsg.getContent().split("-");
-		String newPlayerPos = chessTable.get(movement[1]);
+		String content = playerMsg.getContent();
+		String[] movement = content.split("-");
 		int curMov = Integer.parseInt(movement[0]);
 		int newMov = Integer.parseInt(movement[1]);
+		String newPlayerPos = chessTable.get(newMov);
 		
 		if(newPlayerPos.charAt(0) == 'p') {
 			// pojedena nam je figura
@@ -231,6 +236,7 @@ public class ChessMasterAgent extends AgentClass {
 			acl.setPerformative(Performative.propose);
 			acl.setContent(playerMsg.getContent());
 			MessageBuilder.sendACL(acl);
+			System.out.println("poslao poruku na " + aid.getName());
 		}
 	}
 	
@@ -250,6 +256,8 @@ public class ChessMasterAgent extends AgentClass {
 		
 		calcMoves.add(fc);
 		
+		System.out.println("stigla kalkulacija od " + agentMsg.getSender().getName());
+		//System.out.println("calc size " + calcMoves.size() + " figure " + figureAIDs.size());
 		// ako nam je poslednji inform stigao onda krecemo onda trazimo najbolji proracun
 		if(calcMoves.size() == figureAIDs.size()) {
 			moveFigure();
@@ -275,6 +283,11 @@ public class ChessMasterAgent extends AgentClass {
 		msg.setPerformative(Performative.inform);
 		msg.setContent(best.getCurrent_position() + "-" + best.getNew_position());
 		
+		System.out.println("sa pozicije " + best.getCurrent_position() + 
+				" na poziciju " + best.getNew_position() + 
+				" sa efikasnoscu " + best.getEfficiency());
+		
+		
 		AID[] moveRecs = new AID[ figureAIDs.size() + 1 ];
 		int i = 0;
 		for(AID a : figureAIDs.keySet()) {
@@ -284,7 +297,8 @@ public class ChessMasterAgent extends AgentClass {
 		moveRecs[i] = this.player;
 
 		msg.setReceivers( moveRecs );
-		
+
+		MessageBuilder.sendACL(msg);
 		// ocistimo calcMoves
 		calcMoves.clear();
 	}
