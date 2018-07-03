@@ -301,6 +301,33 @@ public class ChessMasterAgent extends AgentClass {
 		MessageBuilder.sendACL(msg);
 		// ocistimo calcMoves
 		calcMoves.clear();
+		
+		printChessTable();
 	}
+
+	private void printChessTable() {
+		System.out.println("#########################################");
+		for(int i = 0; i < 8; i++) {
+			System.out.println("# " + getFigureChar(i*8 + 0) + " | " + 
+					getFigureChar(i*8 + 1) + " | " + 
+					getFigureChar(i*8 + 2) + " | " + 
+					getFigureChar(i*8 + 3) + " | " + 
+					getFigureChar(i*8 + 4) + " | " + 
+					getFigureChar(i*8 + 5) + " | " + 
+					getFigureChar(i*8 + 6) + " | " + 
+					getFigureChar(i*8 + 7) + " #");
+			if(i != 7)
+				System.out.println("#---------------------------------------#");
+		}
+		System.out.println("#########################################");
+	}
+	
+	private String getFigureChar(int loc) {
+		if(chessTable.get(loc).equals("0"))
+			return "0 ";
+		else
+			return chessTable.get(loc);
+	}
+	
 	
 }

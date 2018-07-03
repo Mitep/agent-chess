@@ -22,7 +22,7 @@ public class HeartBeat implements HeartBeatLocal {
 	TimerService ts;
 
 	@Schedules({
-		@Schedule(hour = "*", minute = "*", second = "*/30", info = "every 30 seconds")
+		@Schedule(hour = "*", minute = "*", second = "*/50", info = "every 50 seconds")
 		})
 	private void heartBeatPr() {
 		System.out.println("###### Heartbeat ######");

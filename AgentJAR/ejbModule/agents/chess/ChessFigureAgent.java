@@ -119,6 +119,9 @@ public class ChessFigureAgent extends AgentClass {
 		userArgs.put("table", tableArr);
 		
 		messageUtil.setUserArgs(userArgs);
+		
+		System.out.println(figureType + " poziva " + agentUtil.getName() + " da izracuna kuda moze da se krece");
+		
 		MessageBuilder.sendACL(messageUtil);
 		
 		// za svaku protivnicku figuru odredimo da li moze da nas pojede ili ne
@@ -221,7 +224,9 @@ public class ChessFigureAgent extends AgentClass {
 		chessTable.replace(newPos, chessTable.get(curPos));
 		chessTable.replace(curPos, "0");
 		
-		currentPosition = newPos;
+		if(currentPosition == curPos) {
+			currentPosition = newPos;
+		}
 	}
 	
 	private AID getChessUtilAgent(char aType, AgentCenter host) {

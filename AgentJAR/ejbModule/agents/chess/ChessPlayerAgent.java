@@ -10,7 +10,6 @@ public class ChessPlayerAgent extends AgentClass {
 	public void handleMessage(ACLMessage msg) {
 		if(msg.getPerformative().equals(Performative.inform)) {
 			// master salje useru koji potez je odigrao
-			System.out.println(msg.getContent());
 		} else if(msg.getPerformative().equals(Performative.request)) {
 			// zapocni igru 
 			System.out.println(msg.getContent());
