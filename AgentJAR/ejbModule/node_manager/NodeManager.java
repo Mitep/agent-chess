@@ -40,7 +40,6 @@ public class NodeManager implements NodeManagerLocal {
 			aml.startInit(getThisNode());
 			
 			HeartBeatLocal hbl = (HeartBeatLocal) context.lookup(HeartBeatLocal.LOOKUP);
-			hbl.startProtocol(getSlaves());
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
