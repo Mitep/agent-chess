@@ -22,10 +22,12 @@ public class ChessBishopAgent extends AgentClass {
 
 			int result[] = new int[64];
 			result[poz] = -1;
-			
+
 			char enemy = 'p';
+			char friend = 'c';
 			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
 				enemy = 'c';
+				friend = 'p';
 			}
 
 			// dijagonala - gore levo
@@ -36,6 +38,8 @@ public class ChessBishopAgent extends AgentClass {
 					result[(x - dx) * 8 + (y - dy)] = 1;
 				} else if (niz[(x - dx) * 8 + (y - dy)].charAt(0) == enemy) {
 					result[(x - dx) * 8 + (y - dy)] = 1;
+					break;
+				} else if (niz[(x - dx) * 8 + (y - dy)].charAt(0) == friend) {
 					break;
 				}
 				dx++;
@@ -51,6 +55,8 @@ public class ChessBishopAgent extends AgentClass {
 				} else if (niz[(x - dx) * 8 + (y + dy)].charAt(0) == enemy) {
 					result[(x - dx) * 8 + (y + dy)] = 1;
 					break;
+				} else if (niz[(x - dx) * 8 + (y + dy)].charAt(0) == friend) {
+					break;
 				}
 				dx++;
 				dy++;
@@ -64,6 +70,8 @@ public class ChessBishopAgent extends AgentClass {
 					result[(x + dx) * 8 + (y - dy)] = 1;
 				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == enemy) {
 					result[(x + dx) * 8 + (y - dy)] = 1;
+					break;
+				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == friend) {
 					break;
 				}
 				dx++;
@@ -79,12 +87,13 @@ public class ChessBishopAgent extends AgentClass {
 				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == enemy) {
 					result[(x + dx) * 8 + (y - dy)] = 1;
 					break;
+				} else if (niz[(x + dx) * 8 + (y - dy)].charAt(0) == friend) {
+					break;
 				}
 				dx++;
 				dy++;
 			}
 
-			
 			ACLMessage reply = new ACLMessage();
 			HashMap<String, Object> replyArgs = new HashMap<>();
 			replyArgs.put("result", result);

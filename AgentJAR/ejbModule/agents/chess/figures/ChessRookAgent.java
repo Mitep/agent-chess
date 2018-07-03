@@ -11,14 +11,14 @@ import utils.MessageBuilder;
 public class ChessRookAgent extends AgentClass {
 
 	// x\y
-	// 0	1	2	3	4	5	6	7
-	// 8	9	10	11	12	13	14	15
-	// 16	17	18	19	20	21	22	23
-	// 24	25	26	27	28	29	30	31
-	// 32	33	34	35	36	37	38	39
-	// 40	41	42	43	44	45	46	47
-	// 48	49	50	51	52	53	54	55
-	// 56	57	58	59	60	61	62	63
+	// 0 1 2 3 4 5 6 7
+	// 8 9 10 11 12 13 14 15
+	// 16 17 18 19 20 21 22 23
+	// 24 25 26 27 28 29 30 31
+	// 32 33 34 35 36 37 38 39
+	// 40 41 42 43 44 45 46 47
+	// 48 49 50 51 52 53 54 55
+	// 56 57 58 59 60 61 62 63
 
 	@Override
 	public void handleMessage(ACLMessage poruka) {
@@ -32,10 +32,12 @@ public class ChessRookAgent extends AgentClass {
 
 			int result[] = new int[64];
 			result[poz] = -1;
-			
+
 			char enemy = 'p';
+			char friend = 'c';
 			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
 				enemy = 'c';
+				friend = 'p';
 			}
 
 			int xdmax = 7 - x; // koliko se moze kretati dole po x osi do kraja table
@@ -49,6 +51,8 @@ public class ChessRookAgent extends AgentClass {
 				} else if (niz[(x + i) * 8 + y].charAt(0) == enemy) {
 					result[(x + i) * 8 + y] = 1;
 					break;
+				} else if (niz[(x + i) * 8 + y].charAt(0) == friend) {
+					break;
 				}
 			}
 
@@ -57,6 +61,8 @@ public class ChessRookAgent extends AgentClass {
 					result[(x - i) * 8 + y] = 1;
 				} else if (niz[(x - i) * 8 + y].charAt(0) == enemy) {
 					result[(x - i) * 8 + y] = 1;
+					break;
+				} else if (niz[(x - i) * 8 + y].charAt(0) == friend) {
 					break;
 				}
 			}
@@ -67,6 +73,8 @@ public class ChessRookAgent extends AgentClass {
 				} else if (niz[x * 8 + (y + i)].charAt(0) == enemy) {
 					result[x * 8 + (y + i)] = 1;
 					break;
+				} else if (niz[x * 8 + (y + i)].charAt(0) == friend) {
+					break;
 				}
 			}
 
@@ -75,6 +83,8 @@ public class ChessRookAgent extends AgentClass {
 					result[x * 8 + (y - i)] = 1;
 				} else if (niz[x * 8 + (y - i)].charAt(0) == enemy) {
 					result[x * 8 + (y - i)] = 1;
+					break;
+				} else if (niz[x * 8 + (y - i)].charAt(0) == friend) {
 					break;
 				}
 			}
