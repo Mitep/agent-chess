@@ -214,7 +214,7 @@ export class ChessComponent implements OnInit {
               }
             }
 
-            if (!flag1) {
+            if (!flag1 && !flag) {
               if (this.pfigures[i].position >= 48 && this.pfigures[i].position <= 55) {
                 this.clickable.push(this.pfigures[i].position - 16);
               }
@@ -222,6 +222,29 @@ export class ChessComponent implements OnInit {
 
             if (!flag) {
               this.clickable.push(this.pfigures[i].position - 8);
+            }
+
+            if (Math.floor(this.pfigures[i].position % 8) >= 1 && Math.floor(this.pfigures[i].position % 8) <= 6) {
+              for (var k = 0; k < this.cfigures.length; k++) {
+                if (this.cfigures[k].position == this.pfigures[i].position - 7) {
+                  this.clickable.push(this.pfigures[i].position - 7);
+                }
+                if (this.cfigures[k].position == this.pfigures[i].position - 9) {
+                  this.clickable.push(this.pfigures[i].position - 9);
+                }
+              }
+            } else if (Math.floor(this.pfigures[i].position % 8) >= 1) {
+              for (var k = 0; k < this.cfigures.length; k++) {
+                if (this.cfigures[k].position == this.pfigures[i].position - 9) {
+                  this.clickable.push(this.pfigures[i].position - 9);
+                }
+              }
+            } else if (Math.floor(this.pfigures[i].position % 8) <= 6) {
+              for (var k = 0; k < this.cfigures.length; k++) {
+                if (this.cfigures[k].position == this.pfigures[i].position - 7) {
+                  this.clickable.push(this.pfigures[i].position - 7);
+                }
+              }
             }
             //******************************KNIGHT*****************************
           } else if (this.pfigures[i].id.substring(0, 12) == "knight_white") {
@@ -639,6 +662,14 @@ export class ChessComponent implements OnInit {
             this.fields[this.clicked2] = this.pfigures[i].image;
             this.pfigures[i].position = this.clicked2;
           }
+
+        }
+
+        for (var k = 0; k < this.cfigures.length; k++) {
+          if (this.cfigures[k].position == this.clicked2) {
+            this.cfigures.splice(k, 1);
+            break;
+          }
         }
 
         var moveFigureMsg = "{\"performative\":\"inform\","
@@ -654,28 +685,14 @@ export class ChessComponent implements OnInit {
           + " \"replyWith\":\" \","
           + " \"inReplyTo\":\" \","
           + " \"replyBy\":\" \"}";
-        this.service.sendACLMessage(moveFigureMsg).subscribe(res => console.log(res));
+
+        this.service.sendACLMessage(moveFigureMsg).subscribe(res => console.log(res));    
       }
 
       this.clicked1 = -1;
       this.clicked2 = -1;
       console.log("restarted: " + this.clicked1 + " " + this.clicked2);
       this.clickable = [];
-
-
-
-      /* var moves = this.ws.computerMoves.split("-");
-      var from = parseInt(moves[0]);
-      var to = parseInt(moves[1]);
-
-      for (var i = 0; i < this.cfigures.length; i++) {
-        if (this.cfigures[i].position == from) {
-          this.fields[from] = "../../assets/empty.png";
-          this.fields[to] = this.cfigures[i].image;
-          this.cfigures[i].position = to;
-        }
-      } */
-
 
     }
   }

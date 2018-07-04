@@ -49,7 +49,8 @@ export class WebsocketService {
           }
         }
       } else if (type == "add_agent_type") {
-
+        let aType = { name: data[0].type.name, module: data[0].type.module };
+         w.agentTypes.push(aType);
       } else if (type == "remove_agent_type") {
 
       } else if (type == "acl_message") {
