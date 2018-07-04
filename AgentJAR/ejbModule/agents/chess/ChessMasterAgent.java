@@ -225,7 +225,7 @@ public class ChessMasterAgent extends AgentClass {
 		if(newPlayerPos.charAt(0) == 'c') {
 			System.out.println(" ============================================================================ ");
 			System.out.println(" ============================================================================ ");
-			System.out.println(" ================================== POJEDEN ================================= ");
+			System.out.println(" ================================== POJEDEN "+newPlayerPos +" ================================= ");
 			System.out.println(" ============================================================================ ");
 			System.out.println(" ============================================================================ ");
 			
@@ -233,12 +233,17 @@ public class ChessMasterAgent extends AgentClass {
 			// izbacujemo je iz liste
 			AID dead = null;
 			for(AID a : figureAIDs.keySet()) {
-				if(figureAIDs.get(a) == newMov) {
+				if(figureAIDs.get(a).intValue() == newMov) {
 					dead = a;
 					break;
 				}
 			}
-			figureAIDs.remove(dead);
+			if(dead != null){
+				figureAIDs.remove(dead);
+			}
+			
+			
+			System.out.println("Broj zivih agenata: " + figureAIDs.size());
 		}
 		
 		// pomerimo figuru
@@ -294,6 +299,21 @@ public class ChessMasterAgent extends AgentClass {
 		          best = calcMoves.get(i);
 		        }
 		      }  
+		}
+		
+		if(chessTable.get(best.getNew_position()).charAt(0) == 'p') {
+		      System.out.println(" =================================================================== ");
+		      System.out.println(" =================================================================== ");
+		      System.out.println(" ===================== POJEDEN " + chessTable.get(best.getNew_position()) + " ======================== ");
+		      System.out.println(" =================================================================== ");
+		      System.out.println(" =================================================================== ");
+		}
+		
+		// zamenimo u listi aida
+		for(AID a : figureAIDs.keySet()) {
+		      if(figureAIDs.get(a).intValue() == best.getCurrent_position()) {
+		        figureAIDs.replace(a, best.getNew_position());
+		      }
 		}
 		
 		// pomerimo figuru

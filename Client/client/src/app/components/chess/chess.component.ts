@@ -292,7 +292,7 @@ export class ChessComponent implements OnInit {
                 if (this.pfigures[k].position == this.clickable[j]) {
                   console.log("splice " + this.clickable[j]);
                   this.clickable.splice(j, 1);
-
+                  break;
                 }
               }
             }
@@ -498,6 +498,7 @@ export class ChessComponent implements OnInit {
               for (var h = 0; h < this.clickable.length; h++) {
                 if (this.pfigures[k].position == this.clickable[h]) {
                   this.clickable.splice(h, 1);
+                  break;
                 }
               }
             }
@@ -645,9 +646,8 @@ export class ChessComponent implements OnInit {
       for (var i = 0; i < this.clickable.length; i++) {
         if (id == this.clickable[i]) {
           if (id != this.clicked1) {
+            console.log("evomeeeeeeeeeeeeeeeeeeeeeee");
             this.clicked2 = id;
-          } else {
-            return;
           }
         }
       }
@@ -676,8 +676,6 @@ export class ChessComponent implements OnInit {
 
         }
 
-
-
         var moveFigureMsg = "{\"performative\":\"inform\","
           + " \"sender\":" + this.sender + ","
           + " \"receivers\":[" + this.receiver + "],"
@@ -692,6 +690,7 @@ export class ChessComponent implements OnInit {
           + " \"inReplyTo\":\" \","
           + " \"replyBy\":\" \"}";
 
+        console.log(this.clicked1 + "-" + this.clicked2);
         this.service.sendACLMessage(moveFigureMsg).subscribe(res => console.log(res));
       }
 
