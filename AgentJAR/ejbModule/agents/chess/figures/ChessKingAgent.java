@@ -21,7 +21,7 @@ public class ChessKingAgent extends AgentClass {
 			if (niz[poz].charAt(0) == 'p') { // da li je rec o igracevom pijunu
 				enemy = 'c';
 			}
-			
+
 			int x = poz / 8;
 			int y = (poz % 8);
 
@@ -90,10 +90,10 @@ public class ChessKingAgent extends AgentClass {
 
 			} else if (x == 0) {
 
-				// kralj se nalazi na levom rubu table
+				// kralj se nalazi na gornjem rubu table
 				for (int dx = 0; dx <= 1; dx++) {
 					for (int dy = -1; dy <= 1; dy++) {
-						if (dx != dy) {
+						if (dx != 0 && dy != 0) {
 							if (niz[(x + dx) * 8 + y + dy].equals("0")) {
 								result[(x + dx) * 8 + y + dy] = 1;
 							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == enemy) {
@@ -106,13 +106,13 @@ public class ChessKingAgent extends AgentClass {
 
 			} else if (y == 0) {
 
-				// kralj se nalazi na gornjem rubu table
+				// kralj se nalazi na levom rubu table
 				for (int dx = -1; dx <= 1; dx++) {
 					for (int dy = 0; dy <= 1; dy++) {
-						if (dx != dy) {
+						if (dx != 0 && dy != 0) {
 							if (niz[(x + dx) * 8 + y + dy].equals("0")) {
 								result[(x + dx) * 8 + y + dy] = 1;
-							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == 'p') {
+							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == enemy) {
 								result[(x + dx) * 8 + y + dy] = 1;
 								break;
 							}
@@ -125,41 +125,41 @@ public class ChessKingAgent extends AgentClass {
 				// kralj se nalazi na donjem rubu table
 				for (int dx = -1; dx <= 0; dx++) {
 					for (int dy = -1; dy <= 1; dy++) {
-						if (dx != dy) {
+						if (dx != 0 && dy != 0) {
 							if (niz[(x + dx) * 8 + y + dy].equals("0")) {
 								result[(x + dx) * 8 + y + dy] = 1;
-							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == 'p') {
+							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == enemy) {
 								result[(x + dx) * 8 + y + dy] = 1;
 								break;
 							}
 						}
 					}
 				}
-				
+
 			} else if (y == 7) {
 
 				// kralj se nalazi na desnom rubu table
 				for (int dx = -1; dx <= 1; dx++) {
 					for (int dy = -1; dy <= 0; dy++) {
-						if (dx != dy) {
+						if (dx != 0 && dy != 0) {
 							if (niz[(x + dx) * 8 + y + dy].equals("0")) {
 								result[(x + dx) * 8 + y + dy] = 1;
-							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == 'p') {
+							} else if (niz[(x + dx) * 8 + y + dy].charAt(0) == enemy) {
 								result[(x + dx) * 8 + y + dy] = 1;
 								break;
 							}
 						}
 					}
 				}
-				
+
 			} else {
 				// kralj se ne nalazi blizu ruba
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						if (i != j) {
+						if (i != 0 && j != 0) {
 							if (niz[(x + i) * 8 + y + j].equals("0")) {
 								result[(x + i) * 8 + y + j] = 1;
-							} else if (niz[(x + i) * 8 + y + j].charAt(0) == 'p') {
+							} else if (niz[(x + i) * 8 + y + j].charAt(0) == enemy) {
 								result[(x + i) * 8 + y + j] = 1;
 								break;
 							}
@@ -167,7 +167,7 @@ public class ChessKingAgent extends AgentClass {
 					}
 				}
 			}
-			
+
 			ACLMessage reply = new ACLMessage();
 			HashMap<String, Object> replyArgs = new HashMap<>();
 			replyArgs.put("result", result);
