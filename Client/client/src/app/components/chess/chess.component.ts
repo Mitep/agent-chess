@@ -61,6 +61,13 @@ export class ChessComponent implements OnInit {
           var from = parseInt(moves[0]);
           var to = parseInt(moves[1]);
 
+          for (var j = 0; j < comp.pfigures.length; j++) {
+            if (comp.pfigures[j].position == to) {
+              comp.pfigures.splice(j, 1);
+              break;
+            }
+          }
+
           for (var i = 0; i < comp.cfigures.length; i++) {
             if (comp.cfigures[i].position == from) {
               comp.fields[from] = "../../assets/empty.png";
@@ -68,11 +75,7 @@ export class ChessComponent implements OnInit {
               comp.cfigures[i].position = to;
             }
           }
-          for (var j = 0; j < comp.pfigures.length; j++) {
-            if (comp.pfigures[j].position == to) {
-              comp.pfigures.splice(j, 1);
-            }
-          }
+
         }
       }
     }
@@ -89,15 +92,11 @@ export class ChessComponent implements OnInit {
     this.clicked1 = -1;
     this.clicked2 = -1;
 
-
-
     let master = "agents.chess" + "$" + "ChessMasterAgent" + "/" + "masterChess";
     this.service.startAgent(master).subscribe(res => console.log(res));
 
     let player = "agents.chess" + "$" + "ChessPlayerAgent" + "/" + "playerChess";
     this.service.startAgent(player).subscribe(res => console.log(res));
-
-
 
 
     let aclMsg = "{\"performative\":\"request\","
@@ -645,7 +644,11 @@ export class ChessComponent implements OnInit {
     } else if (this.clicked2 == -1) {
       for (var i = 0; i < this.clickable.length; i++) {
         if (id == this.clickable[i]) {
-          this.clicked2 = id;
+          if (id != this.clicked1) {
+            this.clicked2 = id;
+          } else {
+            return;
+          }
         }
       }
       console.log("1: " + this.clicked1);
@@ -656,6 +659,14 @@ export class ChessComponent implements OnInit {
         }
       } */
       if (this.clicked2 != -1) {
+
+        for (var k = 0; k < this.cfigures.length; k++) {
+          if (this.cfigures[k].position == this.clicked2) {
+            this.cfigures.splice(k, 1);
+            break;
+          }
+        }
+
         for (var i = 0; i < this.pfigures.length; i++) {
           if (this.pfigures[i].position == this.clicked1) {
             this.fields[this.clicked1] = "../../assets/empty.png";
@@ -665,12 +676,7 @@ export class ChessComponent implements OnInit {
 
         }
 
-        for (var k = 0; k < this.cfigures.length; k++) {
-          if (this.cfigures[k].position == this.clicked2) {
-            this.cfigures.splice(k, 1);
-            break;
-          }
-        }
+
 
         var moveFigureMsg = "{\"performative\":\"inform\","
           + " \"sender\":" + this.sender + ","
@@ -686,7 +692,7 @@ export class ChessComponent implements OnInit {
           + " \"inReplyTo\":\" \","
           + " \"replyBy\":\" \"}";
 
-        this.service.sendACLMessage(moveFigureMsg).subscribe(res => console.log(res));    
+        this.service.sendACLMessage(moveFigureMsg).subscribe(res => console.log(res));
       }
 
       this.clicked1 = -1;
