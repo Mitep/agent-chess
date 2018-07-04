@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Figure } from '../../interfaces/figure';
 import { RestService } from '../../services/rest.service';
 import { WebsocketService } from '../../services/websocket.service';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-chess',
@@ -20,17 +22,18 @@ export class ChessComponent implements OnInit {
   clicked1: number = -1;
   clicked2: number = -1;
 
-   senderType = "{\"name\":\"ChessPlayerAgent\",\"module\":\"agents.chess\"}";
-   senderHost = "{\"alias\":\"master\",\"address\":\"localhost:8080\"}";
-   sender = "{\"name\":\"playerChess\","
-      + " \"host\":" + this.senderHost + ","
-      + " \"type\":" + this.senderType + "}";
+  messages: string[] = [];
+  senderType = "{\"name\":\"ChessPlayerAgent\",\"module\":\"agents.chess\"}";
+  senderHost = "{\"alias\":\"master\",\"address\":\"localhost:8080\"}";
+  sender = "{\"name\":\"playerChess\","
+    + " \"host\":" + this.senderHost + ","
+    + " \"type\":" + this.senderType + "}";
 
-    receiverType = "{\"name\":\"ChessMasterAgent\",\"module\":\"agents.chess\"}";
-    receiverHost = "{\"alias\":\"master\",\"address\":\"localhost:8080\"}";
-    receiver = "{\"name\":\"masterChess\","
-      + " \"host\":" + this.receiverHost + ","
-      + " \"type\":" + this.receiverType + "}";
+  receiverType = "{\"name\":\"ChessMasterAgent\",\"module\":\"agents.chess\"}";
+  receiverHost = "{\"alias\":\"master\",\"address\":\"localhost:8080\"}";
+  receiver = "{\"name\":\"masterChess\","
+    + " \"host\":" + this.receiverHost + ","
+    + " \"type\":" + this.receiverType + "}";
 
   constructor(private service: RestService, private ws: WebsocketService) {
     for (var i = 0; i < 64; i++) {
@@ -39,6 +42,40 @@ export class ChessComponent implements OnInit {
   }
 
   ngOnInit() {
+    var comp = this;
+    this.ws.ws.onmessage = function (message) {
+      var json = JSON.parse(message.data);
+      var type = json.type;
+      var data = json.data;
+      let date = new Date();
+      let now = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + " - ";
+      comp.messages.push(now + message.data);
+
+      if (type == "acl_message") {
+
+        if (data[0].sender.name == "masterChess" && data[0].performative == "inform") {
+          console.log("sender name: " + data[0].sender.name);
+          console.log("performative: " + data[0].performative);
+          console.log("content: " + data[0].content);
+          var moves = data[0].content.split("-");
+          var from = parseInt(moves[0]);
+          var to = parseInt(moves[1]);
+
+          for (var i = 0; i < comp.cfigures.length; i++) {
+            if (comp.cfigures[i].position == from) {
+              comp.fields[from] = "../../assets/empty.png";
+              comp.fields[to] = comp.cfigures[i].image;
+              comp.cfigures[i].position = to;
+            }
+          }
+          for (var j = 0; j < comp.pfigures.length; j++) {
+            if (comp.pfigures[j].position == to) {
+              comp.pfigures.splice(j, 1);
+            }
+          }
+        }
+      }
+    }
   }
 
   startGame() {
@@ -52,6 +89,8 @@ export class ChessComponent implements OnInit {
     this.clicked1 = -1;
     this.clicked2 = -1;
 
+
+
     let master = "agents.chess" + "$" + "ChessMasterAgent" + "/" + "masterChess";
     this.service.startAgent(master).subscribe(res => console.log(res));
 
@@ -59,7 +98,7 @@ export class ChessComponent implements OnInit {
     this.service.startAgent(player).subscribe(res => console.log(res));
 
 
-    
+
 
     let aclMsg = "{\"performative\":\"request\","
       + " \"sender\":" + this.sender + ","
@@ -603,25 +642,41 @@ export class ChessComponent implements OnInit {
         }
 
         var moveFigureMsg = "{\"performative\":\"inform\","
-        + " \"sender\":" + this.sender + ","
-        + " \"receivers\":[" + this.receiver + "],"
-        + " \"replyTo\":" + null + ","
-        + " \"content\":\""+this.clicked1+"-"+this.clicked2+"\","
-        + " \"language\":\" \","
-        + " \"encoding\":\" \","
-        + " \"ontology\":\" \","
-        + " \"protocol\":\" \","
-        + " \"conversationId\":\" \","
-        + " \"replyWith\":\" \","
-        + " \"inReplyTo\":\" \","
-        + " \"replyBy\":\" \"}";
+          + " \"sender\":" + this.sender + ","
+          + " \"receivers\":[" + this.receiver + "],"
+          + " \"replyTo\":" + null + ","
+          + " \"content\":\"" + this.clicked1 + "-" + this.clicked2 + "\","
+          + " \"language\":\" \","
+          + " \"encoding\":\" \","
+          + " \"ontology\":\" \","
+          + " \"protocol\":\" \","
+          + " \"conversationId\":\" \","
+          + " \"replyWith\":\" \","
+          + " \"inReplyTo\":\" \","
+          + " \"replyBy\":\" \"}";
         this.service.sendACLMessage(moveFigureMsg).subscribe(res => console.log(res));
       }
-      console.log(moveFigureMsg);
+
       this.clicked1 = -1;
       this.clicked2 = -1;
       console.log("restarted: " + this.clicked1 + " " + this.clicked2);
       this.clickable = [];
+
+
+
+      /* var moves = this.ws.computerMoves.split("-");
+      var from = parseInt(moves[0]);
+      var to = parseInt(moves[1]);
+
+      for (var i = 0; i < this.cfigures.length; i++) {
+        if (this.cfigures[i].position == from) {
+          this.fields[from] = "../../assets/empty.png";
+          this.fields[to] = this.cfigures[i].image;
+          this.cfigures[i].position = to;
+        }
+      } */
+
+
     }
   }
 

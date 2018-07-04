@@ -268,8 +268,13 @@ public class ChessMasterAgent extends AgentClass {
 		// pronadjemo najbolji potez
 		FigureCalculation best = calcMoves.get(0);
 		for(int i=1; i < calcMoves.size(); i++) {
-			if(calcMoves.get(i).getEfficiency() >= best.getEfficiency())
-				best = calcMoves.get(i);
+		      if(calcMoves.get(i).getEfficiency() > best.getEfficiency()) {
+		        best = calcMoves.get(i);
+		      } else if(calcMoves.get(i).getEfficiency() == best.getEfficiency()) {
+		        if(Math.random() > 0.5) {
+		          best = calcMoves.get(i);
+		        }
+		      }  
 		}
 		
 		// pomerimo figuru

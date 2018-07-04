@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AID } from '../interfaces/aid';
 import { AType } from '../interfaces/atype';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+
+import { ChessComponent } from '../components/chess/chess.component';
+
 const url = 'ws://localhost:8080/AgentWAR/websocket';
 
 @Injectable()
@@ -10,9 +15,11 @@ export class WebsocketService {
   agentTypes: AType[] = [];
   performatives: string[] = [];
   runningAgents: AID[] = [];
-  messages: string[] =[];
+  messages: string[] = [];
 
-  constructor() { }
+  constructor() {
+  
+  }
 
   public connect(): void {
     this.ws = new WebSocket(url);
@@ -23,9 +30,8 @@ export class WebsocketService {
       var json = JSON.parse(message.data);
       var type = json.type;
       var data = json.data;
-      console.log("type: " + type);
       let date = new Date();
-     
+
       let now = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + " - ";
       w.messages.push(now + message.data);
 
@@ -47,10 +53,16 @@ export class WebsocketService {
       } else if (type == "remove_agent_type") {
 
       } else if (type == "acl_message") {
+        console.log("sender name: " + data[0].sender.name);
+        console.log("performative: " + data[0].performative);
+        console.log("content: " + data[0].content);
 
+        if (data[0].sender.name == "masterChess" && data[0].performative == "inform") {
+   
+        }
       }
-
-
     };
+
   }
+
 }
