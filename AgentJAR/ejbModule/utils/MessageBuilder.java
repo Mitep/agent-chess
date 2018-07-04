@@ -34,7 +34,9 @@ public class MessageBuilder {
 			connection.start();
 
 			ObjectMessage tmsg = session.createObjectMessage((Serializable) msg);
+			tmsg.setJMSDeliveryTime(12000);
 			MessageProducer producer = session.createProducer(queue);
+			producer.setTimeToLive(12000);
 			producer.send(tmsg);
 			producer.close();
 			connection.stop();

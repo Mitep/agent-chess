@@ -198,28 +198,47 @@ public class ChessMasterAgent extends AgentClass {
 			aclmp.setContent("Move figure.");
 			aclmp.setReceivers(new AID[] { playerMsg.getSender() });
 			MessageBuilder.sendACL(aclmp);
+			
+			for(AID a : figureAIDs.keySet()) {
+				System.out.println(a.getName() + " " + figureAIDs.get(a));
+			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		System.out.println("======================================== MASTER ==================================");
+		printChessTable();
 	}
 	
 	private void calculateMovement(ACLMessage playerMsg) {
 		// proverimo da nam neka figurica nije pojedena
 		// ako jeste uklonimo je iz liste  figureAIDs
+		// i iz chessTable
 		String content = playerMsg.getContent();
 		String[] movement = content.split("-");
 		int curMov = Integer.parseInt(movement[0]);
 		int newMov = Integer.parseInt(movement[1]);
 		String newPlayerPos = chessTable.get(newMov);
 		
-		if(newPlayerPos.charAt(0) == 'p') {
+		if(newPlayerPos.charAt(0) == 'c') {
+			System.out.println(" ============================================================================ ");
+			System.out.println(" ============================================================================ ");
+			System.out.println(" ================================== POJEDEN ================================= ");
+			System.out.println(" ============================================================================ ");
+			System.out.println(" ============================================================================ ");
+			
 			// pojedena nam je figura
 			// izbacujemo je iz liste
+			AID dead = null;
 			for(AID a : figureAIDs.keySet()) {
 				if(figureAIDs.get(a) == newMov) {
-					figureAIDs.remove(a);
+					dead = a;
+					break;
 				}
 			}
+			figureAIDs.remove(dead);
 		}
 		
 		// pomerimo figuru
@@ -280,7 +299,7 @@ public class ChessMasterAgent extends AgentClass {
 		// pomerimo figuru
 		String figure = chessTable.get(best.getCurrent_position());
 		chessTable.replace(best.getCurrent_position(), "0");
-		chessTable.replace(best.getNew_position(), figure);
+		chessTable.replace(best.getNew_position(), figure);	
 		
 		// posaljemo poruku playeru i nasim agentima sta smo odigrali
 		ACLMessage msg = new ACLMessage();

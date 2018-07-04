@@ -3,6 +3,7 @@ package agents.chess;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.ejb.Stateful;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
@@ -15,6 +16,7 @@ import model.agent.AgentType;
 import model.center.AgentCenter;
 import utils.MessageBuilder;
 
+@Stateful
 public class ChessFigureAgent extends AgentClass {
 
 	public static double pawnValue = 1.5;
@@ -31,6 +33,8 @@ public class ChessFigureAgent extends AgentClass {
 	private int enemyNumber;
 	private int returnedResults = 0;
 	
+	private HashMap<AgentType, AID> utilAgents = new HashMap<AgentType, AID>();
+	
 	private AID master;
 	
 	@Override
@@ -46,7 +50,7 @@ public class ChessFigureAgent extends AgentClass {
 			// stize nam od util agenta poruka
 			getUtilResult(msg);
 		}  else if (msg.getPerformative().equals(Performative.inform)) {
-			// salje nam player koji potez je odigrao
+			// salje nam master koji potez je odigrao
 			playersMove(msg);
 		}
 	}
@@ -87,6 +91,9 @@ public class ChessFigureAgent extends AgentClass {
 		for(int i = 16; i < 48; i++) {
 			chessTable.put(i, "0");
 		}
+		
+		System.out.println("======================================== " + Id.getName() + " ==================================");
+		printChessTable();
 	}
 
 	private void calculateMovement(ACLMessage masterMsg) {
@@ -99,6 +106,9 @@ public class ChessFigureAgent extends AgentClass {
 		String figure = chessTable.get(curMov);
 		chessTable.replace(curMov, "0");
 		chessTable.replace(newMov, figure);
+		
+		System.out.println("======================================== " + Id.getName() + " ==================================");
+		printChessTable();
 		
 		AgentCenter host = masterMsg.getSender().getHost();
 		AID agentUtil;
@@ -126,15 +136,15 @@ public class ChessFigureAgent extends AgentClass {
 		
 		// za svaku protivnicku figuru odredimo da li moze da nas pojede ili ne
 		// dodamo u rezultat tako sto ga umanjimo
-		for(int i = 0; i < 64; i++) {
-			if(chessTable.get(i).charAt(0) == 'p') {
-				agentUtil = getChessUtilAgent(chessTable.get(i).charAt(1), host);
-				messageUtil.setReceivers(new AID[] { agentUtil });
-				messageUtil.setSender(Id);
-				userArgs.replace("position", i);
-				MessageBuilder.sendACL(messageUtil);
-			}
-		}
+//		for(int i = 0; i < 64; i++) {
+//			if(chessTable.get(i).charAt(0) == 'p') {
+//				agentUtil = getChessUtilAgent(chessTable.get(i).charAt(1), host);
+//				messageUtil.setReceivers(new AID[] { agentUtil });
+//				messageUtil.setSender(Id);
+//				userArgs.replace("position", i);
+//				MessageBuilder.sendACL(messageUtil);
+//			}
+//		}
 		
 	}
 	
@@ -145,6 +155,10 @@ public class ChessFigureAgent extends AgentClass {
 		if(result[currentPosition] == -1) {
 			// za ovu figuru
 			for(int i = 0; i < 64; i++) {
+				if(i == currentPosition) {
+					utilResult.add(-0.5);
+					continue;
+				}
 				
 				if(chessTable.get(i).charAt(0) == 'p') {
 					switch(chessTable.get(i).charAt(1)) {
@@ -186,6 +200,8 @@ public class ChessFigureAgent extends AgentClass {
 		if(returnedResults == enemyNumber) {
 			sendResults();
 		}
+		
+		sendResults();
 	}
 	
 	private void sendResults() {
@@ -250,18 +266,21 @@ public class ChessFigureAgent extends AgentClass {
 						break;
 			}
 			
+			
 			AID retAgent = null;
-			for(AID a : aml.getRunningAgents()) {
-				if(a.getType().getName().equals(figureType.getName())) {
-					retAgent = a;
-					return retAgent;
+			for(AgentType a : utilAgents.keySet()) {
+				if(a.getName().equals(figureType.getName())) {
+					retAgent = utilAgents.get(a);
+					return utilAgents.get(a);
 				}
 			}
 			
+			
 			if(retAgent == null) {
-				String agentName = aType + "util";
+				String agentName = aType + "util"+ currentPosition;
 				retAgent = new AID(agentName, host, figureType);
 				aml.startAgent(retAgent);
+				utilAgents.put(figureType, retAgent);
 			}			
 			
 			return retAgent;
@@ -269,6 +288,30 @@ public class ChessFigureAgent extends AgentClass {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	private void printChessTable() {
+		System.out.println("#########################################");
+		for(int i = 0; i < 8; i++) {
+			System.out.println("# " + getFigureChar(i*8 + 0) + " | " + 
+					getFigureChar(i*8 + 1) + " | " + 
+					getFigureChar(i*8 + 2) + " | " + 
+					getFigureChar(i*8 + 3) + " | " + 
+					getFigureChar(i*8 + 4) + " | " + 
+					getFigureChar(i*8 + 5) + " | " + 
+					getFigureChar(i*8 + 6) + " | " + 
+					getFigureChar(i*8 + 7) + " #");
+			if(i != 7)
+				System.out.println("#---------------------------------------#");
+		}
+		System.out.println("#########################################");
+	}
+	
+	private String getFigureChar(int loc) {
+		if(chessTable.get(loc).equals("0"))
+			return "0 ";
+		else
+			return chessTable.get(loc);
 	}
 	
 }
