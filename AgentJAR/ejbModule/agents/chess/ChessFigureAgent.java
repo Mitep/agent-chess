@@ -92,8 +92,8 @@ public class ChessFigureAgent extends AgentClass {
 			chessTable.put(i, "0");
 		}
 		
-		System.out.println("======================================== " + Id.getName() + " ==================================");
-		printChessTable();
+		//System.out.println("======================================== " + Id.getName() + " ==================================");
+		//printChessTable();
 	}
 
 	private void calculateMovement(ACLMessage masterMsg) {
@@ -107,8 +107,8 @@ public class ChessFigureAgent extends AgentClass {
 		chessTable.replace(curMov, "0");
 		chessTable.replace(newMov, figure);
 		
-		System.out.println("======================================== " + Id.getName() + " ==================================");
-		printChessTable();
+		//System.out.println("======================================== " + Id.getName() + " ==================================");
+		//printChessTable();
 		
 		AgentCenter host = masterMsg.getSender().getHost();
 		AID agentUtil;

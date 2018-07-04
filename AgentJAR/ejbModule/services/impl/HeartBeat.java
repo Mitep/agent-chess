@@ -22,7 +22,7 @@ public class HeartBeat implements HeartBeatLocal {
 	TimerService ts;
 
 	@Schedules({
-		@Schedule(hour = "*", minute = "*", second = "*/50", info = "every 50 seconds")
+		@Schedule(hour = "*", minute = "*", second = "*/30", info = "every 30 seconds")
 		})
 	private void heartBeatPr() {
 		System.out.println("###### Heartbeat ######");
@@ -35,6 +35,7 @@ public class HeartBeat implements HeartBeatLocal {
 				if(RestBuilder.getHeartBeat(a) == false) {
 					if(RestBuilder.getHeartBeat(a) == false) {
 						// brisemo ovaj cvor
+						nml.deleteSlave(a);
 					}
 				}
 			}

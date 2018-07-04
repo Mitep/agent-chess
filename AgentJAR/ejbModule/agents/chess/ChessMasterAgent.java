@@ -208,8 +208,8 @@ public class ChessMasterAgent extends AgentClass {
 		}
 		
 		
-		System.out.println("======================================== MASTER ==================================");
-		printChessTable();
+		//System.out.println("======================================== MASTER ==================================");
+		//printChessTable();
 	}
 	
 	private void calculateMovement(ACLMessage playerMsg) {
